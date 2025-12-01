@@ -1,30 +1,22 @@
-Here are the implementation steps for building and evaluating the ML pipeline:
+Here are the implementation steps for a Python ML engineer:
 
-1.  **Generate the Synthetic Dataset and Introduce Missing Values:**
-    *   Use `sklearn.datasets.make_classification` to create a base dataset with at least 1000 samples and 5 numerical features.
-    *   Convert this data into a Pandas DataFrame for easier manipulation.
-    *   Manually add two new categorical features to the DataFrame: one with 3 unique string values (e.g., 'A', 'B', 'C') and another with 5 unique string values (e.g., 'X', 'Y', 'Z', 'W', 'V'). Ensure these are of object/category dtype.
-    *   Randomly introduce `np.nan` into two of the numerical features (e.g., 5-10% of values in each of those two columns).
+1.  **Generate and Augment the Dataset:**
+    *   Generate a base numerical classification dataset and its target variable using `sklearn.datasets.make_classification`, ensuring at least 1000 samples and 5 features.
+    *   Convert this numerical data into a Pandas DataFrame.
+    *   Add two new synthetic categorical features to the DataFrame: one with 3 unique values and another with 5 unique values. These can be generated randomly (e.g., by sampling from a predefined list of strings or integers).
+    *   Introduce missing values (`np.nan`) into two specific numerical columns of the DataFrame.
 
-2.  **Define Preprocessing Transformers for Numerical and Categorical Data:**
-    *   Create a pipeline for numerical features consisting of `sklearn.impute.SimpleImputer` (strategy='mean') followed by `sklearn.preprocessing.StandardScaler`.
-    *   Create a transformer for categorical features using `sklearn.preprocessing.OneHotEncoder` (handle_unknown='ignore' is often a good practice).
+2.  **Define Preprocessing Steps with `ColumnTransformer`:**
+    *   Identify the list of column names corresponding to numerical features and categorical features in your DataFrame.
+    *   Create a numerical preprocessing pipeline consisting of a `SimpleImputer` (with `strategy='mean'`) followed by a `StandardScaler`.
+    *   Create a categorical preprocessing pipeline consisting solely of a `OneHotEncoder` (ensure `handle_unknown='ignore'` to robustly handle unseen categories during cross-validation).
+    *   Instantiate an `sklearn.compose.ColumnTransformer`. Map the numerical preprocessing pipeline to the identified numerical feature column names and the categorical preprocessing pipeline to the identified categorical feature column names.
 
-3.  **Construct the `ColumnTransformer`:**
-    *   Identify the column names or indices for your numerical features (those 5 numerical features, including the two with NaNs).
-    *   Identify the column names or indices for your categorical features (the two you added).
-    *   Create an `sklearn.compose.ColumnTransformer` that applies the numerical preprocessing pipeline to the numerical features and the `OneHotEncoder` to the categorical features. Specify `remainder='passthrough'` if you have other columns you wish to keep unprocessed, or `remainder='drop'` if not explicitly included.
+3.  **Construct the Machine Learning Pipeline:**
+    *   Initialize a `RandomForestClassifier` with appropriate parameters (e.g., set `random_state` for reproducibility).
+    *   Build an `sklearn.pipeline.Pipeline` where the first step is the `ColumnTransformer` configured in Step 2, and the second step is the initialized `RandomForestClassifier`.
 
-4.  **Build the End-to-End Machine Learning Pipeline:**
-    *   Instantiate an `sklearn.ensemble.RandomForestClassifier` with desired parameters (e.g., `random_state` for reproducibility).
-    *   Create an `sklearn.pipeline.Pipeline` where the first step is your `ColumnTransformer` and the second step is the `RandomForestClassifier`.
-
-5.  **Evaluate the Pipeline using Cross-Validation:**
-    *   Use `sklearn.model_selection.cross_val_score` to evaluate the complete pipeline.
-    *   Pass your full DataFrame (features `X`) and the target variable (`y`) to `cross_val_score`.
-    *   Specify `cv=5` for 5-fold cross-validation.
-    *   Ensure the scoring metric is set to 'accuracy'.
-
-6.  **Report Performance Metrics:**
-    *   Calculate the mean and standard deviation of the accuracy scores obtained from the cross-validation.
-    *   Print or display these two metrics to summarize the pipeline's performance.
+4.  **Evaluate Pipeline Performance using Cross-Validation:**
+    *   Perform 5-fold cross-validation on the complete pipeline using `sklearn.model_selection.cross_val_score`. Pass your full feature DataFrame (X) and the target variable (y) to the function.
+    *   Specify 5-fold cross-validation (`cv=5`) and set the scoring metric to 'accuracy'.
+    *   Calculate and report the mean and standard deviation of the accuracy scores obtained from the cross-validation results.

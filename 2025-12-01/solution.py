@@ -8,98 +8,81 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.ensemble import RandomForestClassifier
 
-# Set a random seed for reproducibility
-random_state = 42
-np.random.seed(random_state) # For consistent NaN introduction
-
 # 1. Generate a synthetic classification dataset and introduce missing values
-# Generate a base numerical dataset using make_classification
-n_samples = 1000
+# Base numerical dataset
+n_samples = 1200
 n_numerical_features = 5
-X_base, y = make_classification(
+X_numerical, y = make_classification(
     n_samples=n_samples,
     n_features=n_numerical_features,
-    n_informative=n_numerical_features, # All features are informative
-    n_redundant=0,
-    n_repeated=0,
-    n_classes=2, # Binary classification
-    random_state=random_state
+    n_informative=4,
+    n_redundant=1,
+    n_classes=2,
+    random_state=42
 )
 
-# Convert the base numerical data to a Pandas DataFrame
-numerical_feature_names = [f'num_feature_{i+1}' for i in range(n_numerical_features)]
-X = pd.DataFrame(X_base, columns=numerical_feature_names)
+# Convert to DataFrame
+feature_names = [f'num_feature_{i}' for i in range(n_numerical_features)]
+X_df = pd.DataFrame(X_numerical, columns=feature_names)
 
-# Manually add two new categorical features
-# Categorical feature 1 with 3 unique values
-cat1_values = ['CategoryA', 'CategoryB', 'CategoryC']
-X['cat_feature_1'] = np.random.choice(cat1_values, n_samples, replace=True)
+# Add two categorical features
+X_df['cat_feature_A'] = np.random.choice(['Type_X', 'Type_Y', 'Type_Z'], size=n_samples)
+X_df['cat_feature_B'] = np.random.choice(['Small', 'Medium', 'Large', 'XL', 'XXL'], size=n_samples)
 
-# Categorical feature 2 with 5 unique values
-cat2_values = ['TypeX', 'TypeY', 'TypeZ', 'TypeW', 'TypeV']
-X['cat_feature_2'] = np.random.choice(cat2_values, n_samples, replace=True)
+# Introduce missing values into two numerical features
+# For 'num_feature_0'
+missing_indices_0 = np.random.choice(X_df.index, size=int(0.05 * n_samples), replace=False)
+X_df.loc[missing_indices_0, 'num_feature_0'] = np.nan
+# For 'num_feature_2'
+missing_indices_2 = np.random.choice(X_df.index, size=int(0.03 * n_samples), replace=False)
+X_df.loc[missing_indices_2, 'num_feature_2'] = np.nan
 
-# Introduce missing values (np.nan) into two of the numerical features
-missing_percentage = 0.07 # Approximately 7% missing values
-features_to_introduce_nan = ['num_feature_1', 'num_feature_3']
+print("--- Dataset Information ---")
+print(f"Dataset shape: {X_df.shape}")
+print(f"Target shape: {y.shape}")
+print("Missing values introduced:")
+print(X_df[['num_feature_0', 'num_feature_2']].isnull().sum())
+print("-" * 30)
 
-for col in features_to_introduce_nan:
-    n_missing = int(n_samples * missing_percentage)
-    # Randomly select indices to set as NaN
-    missing_indices = np.random.choice(X.index, n_missing, replace=False)
-    X.loc[missing_indices, col] = np.nan
+# Define feature types
+numerical_features = [f'num_feature_{i}' for i in range(n_numerical_features)]
+categorical_features = ['cat_feature_A', 'cat_feature_B']
 
-print("--- Dataset Snapshot (first 5 rows) ---")
-print(X.head())
-print("\nMissing values per numerical feature:")
-print(X[numerical_feature_names].isnull().sum())
-print("-" * 40)
-
-# Define column names for the ColumnTransformer
-numerical_features = numerical_feature_names
-categorical_features = ['cat_feature_1', 'cat_feature_2']
-
-# 2. Create an sklearn.compose.ColumnTransformer to preprocess the data
-# Preprocessing for numerical features: Impute NaNs with mean, then StandardScale
+# 2. Create an sklearn.compose.ColumnTransformer for preprocessing
+# Numerical pipeline: Impute with mean, then StandardScale
 numerical_transformer = Pipeline(steps=[
     ('imputer', SimpleImputer(strategy='mean')),
     ('scaler', StandardScaler())
 ])
 
-# Preprocessing for categorical features: One-Hot Encode
-categorical_transformer = OneHotEncoder(handle_unknown='ignore')
+# Categorical pipeline: OneHotEncode
+categorical_transformer = Pipeline(steps=[
+    ('onehot', OneHotEncoder(handle_unknown='ignore'))
+])
 
-# Combine transformers into a ColumnTransformer
+# Combine transformers using ColumnTransformer
 preprocessor = ColumnTransformer(
     transformers=[
         ('num', numerical_transformer, numerical_features),
         ('cat', categorical_transformer, categorical_features)
-    ],
-    remainder='drop' # Drop any columns not explicitly specified
-)
+    ])
 
 # 3. Construct an sklearn.pipeline.Pipeline
 # The pipeline first applies the ColumnTransformer and then trains a RandomForestClassifier
-classifier = RandomForestClassifier(n_estimators=100, random_state=random_state)
-
 pipeline = Pipeline(steps=[
     ('preprocessor', preprocessor),
-    ('classifier', classifier)
+    ('classifier', RandomForestClassifier(random_state=42, n_estimators=100))
 ])
 
 print("\n--- Pipeline Structure ---")
 print(pipeline)
-print("-" * 40)
+print("-" * 30)
 
 # 4. Evaluate the complete pipeline's performance using 5-fold cross-validation
-print("\n--- Evaluating Pipeline with 5-fold Cross-Validation (Accuracy) ---")
-cv_scores = cross_val_score(pipeline, X, y, cv=5, scoring='accuracy', n_jobs=-1) # n_jobs=-1 uses all available cores
+print("\n--- Cross-validation Performance ---")
+cv_scores = cross_val_score(pipeline, X_df, y, cv=5, scoring='accuracy', n_jobs=-1)
 
-# Report the mean accuracy and its standard deviation
-mean_accuracy = np.mean(cv_scores)
-std_accuracy = np.std(cv_scores)
-
-print(f"\nCross-validation Accuracy Scores: {cv_scores}")
-print(f"Mean Accuracy: {mean_accuracy:.4f}")
-print(f"Standard Deviation of Accuracy: {std_accuracy:.4f}")
-print("\n--- Pipeline Evaluation Complete ---")
+print(f"Cross-validation accuracy scores: {cv_scores}")
+print(f"Mean accuracy: {cv_scores.mean():.4f}")
+print(f"Standard deviation of accuracy: {cv_scores.std():.4f}")
+print("-" * 30)
