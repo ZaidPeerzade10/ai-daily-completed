@@ -4,83 +4,100 @@ from sklearn.datasets import make_classification
 from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.impute import SimpleImputer
-from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
 from sklearn.ensemble import RandomForestClassifier
 
-# 1. Generate and Prepare the Synthetic Dataset
-# Generate numerical features and target
-n_samples = 1200
-n_numerical_features = 5
-X_numerical_base, y = make_classification(
-    n_samples=n_samples,
-    n_features=n_numerical_features,
+# Set random seed for reproducibility
+np.random.seed(42)
+
+# 1. Generate the Synthetic Dataset and Introduce Complexities
+# Base numerical classification dataset
+X_numerical, y = make_classification(
+    n_samples=1500,        # At least 1000 samples
+    n_features=5,          # 5 numerical features
     n_informative=3,
     n_redundant=1,
+    n_repeated=0,
     n_classes=2,
     random_state=42
 )
 
-# Manually generate two additional arrays for categorical features
-# One with 3 unique values
-cat_feature_A = np.random.randint(0, 3, size=n_samples)
-# One with 5 unique values
-cat_feature_B = np.random.randint(0, 5, size=n_samples)
+# Convert to DataFrame for easier manipulation and to add categorical features
+X_df = pd.DataFrame(X_numerical, columns=[f'num_feature_{i}' for i in range(5)])
 
-# Combine numerical features and categorical features into a single Pandas DataFrame
-numerical_feature_names = [f'num_feature_{i+1}' for i in range(n_numerical_features)]
-categorical_feature_names = ['cat_feature_A', 'cat_feature_B']
+# Manually add two new categorical columns
+# Categorical feature 1 (3 unique values)
+cat_feature_1_values = ['Category_A', 'Category_B', 'Category_C']
+X_df['cat_feature_1'] = np.random.choice(cat_feature_1_values, size=len(X_df))
 
-X = pd.DataFrame(X_numerical_base, columns=numerical_feature_names)
-X['cat_feature_A'] = cat_feature_A
-X['cat_feature_B'] = cat_feature_B
+# Categorical feature 2 (5 unique values)
+cat_feature_2_values = ['Level_X', 'Level_Y', 'Level_Z', 'Level_W', 'Level_V']
+X_df['cat_feature_2'] = np.random.choice(cat_feature_2_values, size=len(X_df))
 
-# Introduce missing values (np.nan) into two of the numerical features
-# Introduce NaNs into 'num_feature_1' (e.g., 5% of samples)
-nan_indices_1 = np.random.choice(X.index, size=int(0.05 * n_samples), replace=False)
-X.loc[nan_indices_1, 'num_feature_1'] = np.nan
+# Introduce missing values (np.nan) into two of the original numerical features
+# Introduce NaNs in 'num_feature_0'
+missing_idx_0 = np.random.choice(X_df.index, size=int(0.05 * len(X_df)), replace=False) # 5% missing
+X_df.loc[missing_idx_0, 'num_feature_0'] = np.nan
 
-# Introduce NaNs into 'num_feature_3' (e.g., 4% of samples)
-nan_indices_3 = np.random.choice(X.index, size=int(0.04 * n_samples), replace=False)
-X.loc[nan_indices_3, 'num_feature_3'] = np.nan
+# Introduce NaNs in 'num_feature_2'
+missing_idx_2 = np.random.choice(X_df.index, size=int(0.07 * len(X_df)), replace=False) # 7% missing
+X_df.loc[missing_idx_2, 'num_feature_2'] = np.nan
 
-# Define lists of feature names for the ColumnTransformer
-numerical_features = numerical_feature_names
-categorical_features = categorical_feature_names
+print("--- Dataset Information ---")
+print("Dataset Head with Missing Values and Categorical Features:")
+print(X_df.head())
+print("\nMissing values per numerical feature:")
+print(X_df[['num_feature_0', 'num_feature_1', 'num_feature_2', 'num_feature_3', 'num_feature_4']].isnull().sum())
+print(f"\nTotal samples: {len(X_df)}, Total features: {X_df.shape[1]}")
+print(f"Target variable shape: {y.shape}")
 
-# 2. Define Preprocessing Steps for Numerical Features
+# Define feature types for ColumnTransformer
+numerical_features = [f'num_feature_{i}' for i in range(5)]
+categorical_features = ['cat_feature_1', 'cat_feature_2']
+
+# 2. Define Preprocessing Steps for Numerical and Categorical Features
+# Preprocessing pipeline for numerical features: impute with mean, then scale
 numerical_transformer = Pipeline(steps=[
     ('imputer', SimpleImputer(strategy='mean')),
     ('scaler', StandardScaler())
 ])
 
-# 3. Define Preprocessing Steps for Categorical Features
+# Preprocessing for categorical features: OneHotEncoder
 categorical_transformer = OneHotEncoder(handle_unknown='ignore')
 
-# 4. Construct the ColumnTransformer
+# 3. Construct the ColumnTransformer
+# This transformer applies different preprocessing steps to different columns
 preprocessor = ColumnTransformer(
     transformers=[
         ('num', numerical_transformer, numerical_features),
         ('cat', categorical_transformer, categorical_features)
-    ],
-    remainder='drop' # Drop any columns not specified
-)
+    ])
 
-# 5. Instantiate the Machine Learning Model
-classifier = RandomForestClassifier(random_state=42)
+# 4. Assemble the Full Machine Learning Pipeline
+# The full pipeline first preprocesses data and then trains a RandomForestClassifier
+rf_classifier = RandomForestClassifier(random_state=42)
 
-# 6. Build the Complete Scikit-learn Pipeline
-pipeline = Pipeline(steps=[
+full_pipeline = Pipeline(steps=[
     ('preprocessor', preprocessor),
-    ('classifier', classifier)
+    ('classifier', rf_classifier)
 ])
 
-# 7. Evaluate the Pipeline using Cross-Validation
-cv_scores = cross_val_score(pipeline, X, y, cv=5, scoring='accuracy')
+print("\n--- ML Pipeline Details ---")
+print("Full Pipeline Steps:")
+print(full_pipeline)
 
-# Report the mean accuracy and its standard deviation
+# 5. Evaluate the Pipeline using Cross-Validation
+print("\n--- Pipeline Evaluation ---")
+print("Performing 5-fold cross-validation (scoring='accuracy')...")
+# Use n_jobs=-1 to utilize all available CPU cores for faster computation
+cv_scores = cross_val_score(full_pipeline, X_df, y, cv=5, scoring='accuracy', n_jobs=-1)
+
+# 6. Report Performance Metrics
 mean_accuracy = np.mean(cv_scores)
 std_accuracy = np.std(cv_scores)
 
-print(f"Mean cross-validation accuracy: {mean_accuracy:.4f}")
+print(f"\nCross-validation accuracy scores: {cv_scores}")
+print(f"Mean accuracy: {mean_accuracy:.4f}")
 print(f"Standard deviation of accuracy: {std_accuracy:.4f}")
+print("\n--- Script Finished ---")

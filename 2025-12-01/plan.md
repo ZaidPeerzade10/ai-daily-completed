@@ -1,33 +1,27 @@
 Here are the implementation steps for building and evaluating your ML pipeline:
 
-1.  **Generate and Prepare the Synthetic Dataset:**
-    *   Use `sklearn.datasets.make_classification` to create a dataset with at least 1000 samples and 5 numerical features. Ensure the output includes both features (`X_num`) and the target variable (`y`).
-    *   Manually generate two additional arrays for categorical features: one with 3 unique values and another with 5 unique values. These can be represented as integers initially.
-    *   Combine the numerical features (`X_num`) and the manually generated categorical features into a single Pandas DataFrame. Assign clear names to all feature columns (e.g., `num_feature_1`, `cat_feature_A`).
-    *   Introduce missing values (`np.nan`) into two of the numerical features within this DataFrame.
-    *   Separate the complete feature set (the DataFrame, `X`) from the target variable (`y`).
+1.  **Generate the Synthetic Dataset and Introduce Complexities:**
+    *   Use `sklearn.datasets.make_classification` to create a base numerical classification dataset with at least 1000 samples and 5 numerical features.
+    *   Manually add two new categorical columns to this generated dataset. One should contain 3 distinct unique values, and the other 5 distinct unique values.
+    *   Introduce missing values (`np.nan`) into two of the original numerical features you created with `make_classification`. Store your combined features and target label appropriately (e.g., as a Pandas DataFrame for easier column management).
 
-2.  **Define Preprocessing Steps for Numerical Features:**
-    *   Identify the column names corresponding to the numerical features.
-    *   Create a sequence of transformers specifically for these numerical features: first, a `SimpleImputer` configured to fill missing values with the mean of the column, and then a `StandardScaler` to normalize the features.
+2.  **Define Preprocessing Steps for Numerical and Categorical Features:**
+    *   Create a `sklearn.pipeline.Pipeline` specifically for numerical features. This pipeline should first apply `sklearn.impute.SimpleImputer` (using the 'mean' strategy) to handle missing values, and then apply `sklearn.preprocessing.StandardScaler` for feature scaling.
+    *   Create an instance of `sklearn.preprocessing.OneHotEncoder` for categorical features. Ensure you set `handle_unknown='ignore'` for robust handling of unseen categories during prediction.
 
-3.  **Define Preprocessing Steps for Categorical Features:**
-    *   Identify the column names corresponding to the categorical features.
-    *   Create a `OneHotEncoder` instance for these categorical features. Consider setting `handle_unknown='ignore'` to robustly handle unforeseen categories during prediction if applicable, although for a synthetic dataset it might not be strictly necessary.
+3.  **Construct the ColumnTransformer:**
+    *   Identify the names or indices of your numerical features (the 5 features, including those with NaNs) and your categorical features (the 2 newly added features).
+    *   Create an `sklearn.compose.ColumnTransformer`. Assign the numerical preprocessing pipeline (from Step 2) to your numerical features and the `OneHotEncoder` (from Step 2) to your categorical features.
 
-4.  **Construct the `ColumnTransformer`:**
-    *   Create an `sklearn.compose.ColumnTransformer`.
-    *   Map the numerical preprocessing sequence (from Step 2) to the list of numerical feature column names.
-    *   Map the `OneHotEncoder` (from Step 3) to the list of categorical feature column names.
-    *   Specify how to handle any "remainder" columns (e.g., `remainder='drop'` if only the specified columns are to be used, or `remainder='passthrough'` if there were other columns to be included as-is, though for this task, all columns should be explicitly transformed).
+4.  **Assemble the Full Machine Learning Pipeline:**
+    *   Create an `sklearn.pipeline.Pipeline`. The first step in this pipeline should be your configured `ColumnTransformer` (from Step 3), and the second (final) step should be an instance of `sklearn.ensemble.RandomForestClassifier`.
 
-5.  **Instantiate the Machine Learning Model:**
-    *   Create an instance of `sklearn.ensemble.RandomForestClassifier` with desired parameters.
+5.  **Evaluate the Pipeline using Cross-Validation:**
+    *   Utilize `sklearn.model_selection.cross_val_score` to evaluate the performance of your complete pipeline (from Step 4).
+    *   Perform 5-fold cross-validation on your synthetic dataset (the combined features and target label from Step 1).
+    *   Specify 'accuracy' as the scoring metric for evaluation.
 
-6.  **Build the Complete Scikit-learn Pipeline:**
-    *   Construct an `sklearn.pipeline.Pipeline` that chains together the `ColumnTransformer` (from Step 4) as the first step and the `RandomForestClassifier` (from Step 5) as the second step. Assign a descriptive name to each step within the pipeline.
-
-7.  **Evaluate the Pipeline using Cross-Validation:**
-    *   Use `sklearn.model_selection.cross_val_score` with the complete pipeline (from Step 6), your feature DataFrame (`X`), and your target variable (`y`).
-    *   Set the number of cross-validation folds (`cv`) to 5 and the scoring metric (`scoring`) to 'accuracy'.
-    *   Calculate and report the mean and standard deviation of the accuracy scores obtained from the cross-validation folds.
+6.  **Report Performance Metrics:**
+    *   Calculate the mean of the accuracy scores obtained from the 5-fold cross-validation.
+    *   Calculate the standard deviation of these accuracy scores.
+    *   Report both the mean accuracy and its standard deviation, which will provide insight into the pipeline's overall performance and consistency.
