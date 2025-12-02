@@ -1,0 +1,8 @@
+Here are the implementation steps for a Python ML engineer:
+
+1.  **Establish In-Memory SQLite Database Connection:** Initialize an in-memory SQLite database connection using the `sqlite3` module and obtain a cursor object for executing SQL commands.
+2.  **Define and Create Tables:** Execute SQL DDL (Data Definition Language) commands via the cursor to create the `customers` table with `customer_id` (PRIMARY KEY), `name`, and `city` columns. Subsequently, create the `orders` table with `order_id` (PRIMARY KEY), `customer_id` (FOREIGN KEY referencing `customers`), `amount`, and `order_date` columns.
+3.  **Insert Sample Data:** Populate both the `customers` and `orders` tables with sample data using SQL INSERT statements. Ensure at least 5 distinct customers and 10-15 orders, with some customers having multiple associated orders.
+4.  **Construct Analytical SQL Query:** Write a single SQL query that performs an `INNER JOIN` between the `customers` and `orders` tables, `GROUP BY` customer name, and uses the `SUM` aggregate function to calculate the `total_revenue` for each customer. Select the customer's `name` and their calculated `total_revenue`.
+5.  **Execute Query and Load into Pandas DataFrame:** Use the `pandas.read_sql_query()` function, passing your constructed analytical SQL query and the database connection object, to directly execute the query and load the results into a pandas DataFrame.
+6.  **Identify and Display Top Customers:** Sort the resulting pandas DataFrame by the `total_revenue` column in descending order and then display the top 3 rows to show the customers with the highest total purchases.
