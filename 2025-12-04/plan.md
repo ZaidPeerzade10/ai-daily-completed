@@ -1,32 +1,29 @@
-Here are the implementation steps for a Python ML engineer to follow:
+Here are the implementation steps for the task:
 
-1.  **Generate Synthetic Data and Create Initial DataFrame:**
-    *   Use `sklearn.datasets.make_blobs` to generate a synthetic dataset with at least 500 samples, 4 numerical features, and 3 distinct clusters.
-    *   Convert the generated features and cluster labels into a pandas DataFrame.
-    *   Name the numerical feature columns descriptively (e.g., `feature_0`, `feature_1`, `feature_2`, `feature_3`).
-    *   Add the cluster labels as a new column named `cluster_id` to the DataFrame.
+1.  **Generate Synthetic Data and Initial DataFrame**:
+    *   Use `sklearn.datasets.make_blobs` to generate at least 500 samples, 4 numerical features, and 3 distinct clusters. This function will return two arrays: one for the features (X) and one for the cluster labels (y).
+    *   Convert the numerical features (X) into a pandas DataFrame. Name the columns descriptively, for example, `feature_0`, `feature_1`, `feature_2`, `feature_3`.
 
-2.  **Add a Categorical Feature:**
-    *   Create a new column in the DataFrame named `group`.
-    *   Randomly assign 2-3 distinct categorical values (e.g., 'A', 'B', 'C' or 'Group 1', 'Group 2') to the `group` column for each sample.
+2.  **Incorporate Cluster Labels into DataFrame**:
+    *   Add the cluster labels (y) obtained from `make_blobs` as a new column to your DataFrame. Name this column `cluster_id`.
 
-3.  **Create a Pair Plot:**
-    *   Utilize `seaborn.pairplot` to visualize the relationships between all numerical features.
-    *   Set the `hue` parameter to `cluster_id` to color the points according to their cluster membership.
-    *   Add a descriptive title to the entire pair plot.
+3.  **Add a New Random Categorical Feature**:
+    *   Create a new column in your DataFrame, for instance, named `group`.
+    *   Populate this new column by randomly assigning 2-3 distinct categorical string values (e.g., 'Group A', 'Group B', 'Group C') to each sample. Ensure an even or reasonable distribution of these values.
 
-4.  **Create Separated Histograms/KDE Plots:**
-    *   Select two of your numerical features (e.g., `feature_1` and `feature_2`).
-    *   Generate histograms or Kernel Density Estimate (KDE) plots for these features, separating the visualizations by the unique values of the `group` categorical feature.
-    *   This can be achieved either by using `seaborn.FacetGrid` with `col='group'` and mapping `seaborn.histplot` or `seaborn.kdeplot`, or by using `seaborn.histplot` directly with `hue='group'` and `col='group'`.
-    *   Ensure each sub-plot or the overall `FacetGrid` has appropriate titles and axis labels.
+4.  **Visualize Numerical Features with Pair Plot**:
+    *   Generate a pair plot using `seaborn.pairplot`.
+    *   Specify only the 4 numerical features for plotting.
+    *   Color the points in the scatter plots by the `cluster_id` column.
+    *   Add a comprehensive title to the entire pair plot figure.
 
-5.  **Create a Box Plot or Violin Plot:**
-    *   Choose one of your numerical features (e.g., `feature_3`).
-    *   Generate a box plot or violin plot using `seaborn.boxplot` or `seaborn.violinplot` to show the distribution of this feature across each of the `cluster_id`s.
-    *   Provide a clear title for the plot and ensure both the x-axis and y-axis are appropriately labeled.
+5.  **Visualize Distributions by Categorical Group**:
+    *   Create a set of histograms or Kernel Density Estimate (KDE) plots for `feature_1` and `feature_2`.
+    *   Separate these plots such that you have a distinct plot for each unique value of the newly created `group` categorical feature (e.g., `feature_1` for 'Group A', `feature_1` for 'Group B', etc., and similarly for `feature_2`). This can be achieved using `seaborn.FacetGrid` or by leveraging the `hue` and `col` parameters within `seaborn.histplot`.
+    *   Ensure each individual subplot has appropriate titles and clear axis labels to indicate the feature and the group it represents.
 
-6.  **Ensure Plot Aesthetics and Readability:**
-    *   Review all generated visualizations.
-    *   Confirm that every plot (the pair plot, the histograms/KDEs, and the box/violin plot) has a clear and informative main title.
-    *   Verify that all relevant axes within each plot or subplot are labeled clearly and meaningfully.
+6.  **Visualize Feature Distribution Across Clusters with Box Plot**:
+    *   Generate a box plot (or violin plot) using `seaborn.boxplot` (or `seaborn.violinplot`).
+    *   Display the distribution of `feature_3` on the y-axis.
+    *   Separate the distributions on the x-axis by the different values of the `cluster_id` column.
+    *   Provide a descriptive title for the plot and ensure both axes are clearly labeled.
