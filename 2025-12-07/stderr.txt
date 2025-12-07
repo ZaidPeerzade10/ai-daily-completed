@@ -1,0 +1,7 @@
+/home/runner/work/ai-daily-runner/ai-daily-runner/workspace/2025-12-07/solution_attempt_1.py:64: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
+  daily_avg_value = df.groupby('day_of_week')['value'].mean().reset_index()
+/home/runner/work/ai-daily-runner/ai-daily-runner/workspace/2025-12-07/solution_attempt_1.py:88: FutureWarning: 
+
+Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `x` variable to `hue` and set `legend=False` for the same effect.
+
+  sns.barplot(data=daily_avg_value, x='day_of_week', y='value', palette='viridis')

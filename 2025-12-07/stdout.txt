@@ -1,0 +1,36 @@
+--- Starting Data Generation and Analysis Script ---
+
+--- Head of DataFrame with Engineered Features ---
+   timestamp        value  month day_of_week  is_weekend
+0 2020-01-01  1007.579884      1   Wednesday       False
+1 2020-01-02   897.697218      1    Thursday       False
+2 2020-01-03   965.492539      1      Friday       False
+3 2020-01-04   974.715061      1    Saturday        True
+4 2020-01-05  1159.751935      1      Sunday        True
+
+--- Average Value by Month ---
+    month        value
+0       1  1253.238606
+1       2  1334.214147
+2       3  1358.016308
+3       4  1348.081591
+4       5  1386.683800
+5       6  1338.023115
+6       7  1245.194045
+7       8  1137.940949
+8       9  1054.134633
+9      10  1051.071051
+10     11  1187.012544
+11     12  1333.691361
+
+--- Average Value by Day of Week ---
+  day_of_week        value
+0      Monday  1365.920595
+1     Tuesday  1308.266778
+2   Wednesday  1226.191788
+3    Thursday  1163.944240
+4      Friday  1153.935004
+5    Saturday  1233.291130
+6      Sunday  1313.234240
+
+--- Script Finished ---
