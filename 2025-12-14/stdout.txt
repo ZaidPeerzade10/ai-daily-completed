@@ -1,0 +1,11 @@
+--- Original DataFrame Head ---
+  customer_id           transaction_date      amount product_category
+0    CUST_001 2025-07-13 04:56:27.982604  471.807273       Category_B
+1    CUST_005 2025-05-21 04:56:27.982604  235.310551       Category_C
+2    CUST_006 2025-04-28 04:56:27.982604  240.459819       Category_A
+3    CUST_003 2025-12-02 04:56:27.982604  179.338756       Category_E
+4    CUST_006 2025-11-29 04:56:27.982604   26.790201       Category_C
+
+Total transactions: 10000
+Unique customers: 7
+Date range: 2024-12-14 to 2025-12-13
