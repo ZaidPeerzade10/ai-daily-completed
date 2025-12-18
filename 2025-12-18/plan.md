@@ -1,0 +1,9 @@
+As a senior mentor, I've broken down this task into clear, actionable steps for you. This structure ensures a robust approach to model evaluation and visualization.
+
+Here are the implementation steps:
+
+1.  **Generate Synthetic Dataset:** Create a multi-class classification dataset using `sklearn.datasets.make_classification`. Ensure it has at least 1000 samples, 10 features (with 5 being informative), and 3 distinct classes. Set a `random_state` for reproducibility.
+2.  **Split Data into Training and Testing Sets:** Divide the generated dataset into an 80% training set and a 20% testing set using `sklearn.model_selection.train_test_split`. Remember to set `random_state` here as well to ensure consistent splits.
+3.  **Train RandomForestClassifier:** Initialize a `sklearn.ensemble.RandomForestClassifier` and train it on your training data. For reproducibility, set a `random_state` when initializing the model.
+4.  **Predict on Test Set and Generate Classification Report:** Use the trained Random Forest model to predict class labels for the samples in your test set. Subsequently, generate and print a detailed classification report using `sklearn.metrics.classification_report`, which will show the precision, recall, and f1-score for each class, along with overall averages.
+5.  **Plot Confusion Matrix:** Visualize the performance of your model by plotting the confusion matrix for the test set predictions. Utilize `sklearn.metrics.ConfusionMatrixDisplay.from_estimator` for this purpose, passing your trained model and the test data. Ensure the plot has a descriptive title and appropriate axis labels for clarity.
