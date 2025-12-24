@@ -1,0 +1,13 @@
+Here are the implementation steps for a Python ML engineer:
+
+1.  **Generate the Synthetic Dataset:** Create a pandas DataFrame `X` with 1000 samples and three numerical features (`feature_A`, `feature_B`, `feature_C`) using `numpy.random.rand()` to generate values between 0 and 1. Then, generate the target variable `y` using the provided formula: `y = 2 * X['feature_A'] + 3 * (X['feature_B']**2) - X['feature_C'] + numpy.random.normal(0, 0.5, size=1000)`.
+
+2.  **Perform Exploratory Data Visualization:** Use `seaborn.jointplot` or `seaborn.pairplot` to visualize the relationship between each of the three features in `X` and the target variable `y`. Pay close attention to the scatter plots and marginal distributions to identify any non-linear patterns, especially quadratic relationships, between a feature and `y`. Experiment with different `kind` parameters in `jointplot` (e.g., 'reg', 'kde', 'hex') to enhance visibility.
+
+3.  **Engineer a New Feature:** Based on your visual inspection from the previous step, identify the specific feature in `X` that exhibits a non-linear (likely quadratic) relationship with `y`. Create a new feature by squaring this identified feature. Then, create a new DataFrame, `X_engineered`, which is a copy of `X` but with this newly engineered squared feature added as an additional column.
+
+4.  **Construct Machine Learning Pipelines:** Build two `sklearn.pipeline.Pipeline` objects:
+    *   `pipeline_original`: This pipeline should apply `StandardScaler` to the original DataFrame `X` and then fit a `LinearRegression` model.
+    *   `pipeline_engineered`: This pipeline should apply `StandardScaler` to the `X_engineered` DataFrame (which includes all original features plus the newly engineered squared feature) and then fit a `LinearRegression` model.
+
+5.  **Evaluate and Compare Model Performance:** Utilize `sklearn.model_selection.cross_val_score` to evaluate both pipelines. Perform 5-fold cross-validation and use `neg_mean_squared_error` as the scoring metric. For each pipeline, calculate the mean and standard deviation of the resulting scores. Remember to convert the negative mean squared error scores to positive MSE values before printing. Clearly present the mean and standard deviation of the MSE for both `pipeline_original` and `pipeline_engineered` to highlight the performance improvement (or difference) achieved by the engineered feature.
