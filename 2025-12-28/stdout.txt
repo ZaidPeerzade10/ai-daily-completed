@@ -1,0 +1,14 @@
+--- Image Information ---
+Original Image Shape: (64, 64)
+Original Image Max Value: 200.00
+Original Image Min Value: 0.00
+
+--- Edge Detection Kernel ---
+[[ 0.  1.  0.]
+ [ 1. -4.  1.]
+ [ 0.  1.  0.]]
+
+--- Convolved Image Information ---
+Edge Detected Image Shape: (64, 64)
+Edge Detected Image Max Value: 350.00
+Edge Detected Image Min Value: -400.00
