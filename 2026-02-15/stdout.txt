@@ -1,0 +1,80 @@
+--- Synthetic Data Generated ---
+Users DataFrame Head:
+    user_id signup_date   region  age acquisition_channel
+0        1  2025-02-14    South   31               Email
+1        2  2023-06-26  Central   57            Referral
+2        3  2024-09-02     West   58             Organic
+3        4  2024-03-22    North   39             Organic
+4        5  2024-02-16  Central   28             Organic
+
+Transactions DataFrame Head:
+    transaction_id  user_id transaction_date      amount product_category
+0               1      418       2023-03-04  909.107700            Books
+1               2      194       2025-01-07  105.982602            Books
+2               3      544       2024-06-06  610.345679         Clothing
+3               4      498       2025-02-09  456.980980       Home Goods
+4               5      272       2025-06-30  939.083530       Home Goods
+
+Total users: 602
+Total transactions: 3783
+
+Global Analysis Date: 2026-04-16
+Feature Cutoff Date: 2026-01-16
+
+--- SQL Feature Engineering Results (Head) ---
+   user_id  ...  days_since_last_transaction_pre_cutoff
+0        1  ...                                    16.0
+1        2  ...                                    13.0
+2        3  ...                                    92.0
+3        4  ...                                   274.0
+4        5  ...                                    60.0
+
+[5 rows x 10 columns]
+
+Number of users with engineered features: 602
+
+--- Pandas Feature Engineering & Target Creation Results (Head) ---
+   user_id  age  ... total_spend_future future_spending_tier
+0        1   31  ...           0.000000      No_Future_Spend
+1        2   57  ...           0.000000      No_Future_Spend
+2        3   58  ...           0.000000      No_Future_Spend
+3        4   39  ...           0.000000      No_Future_Spend
+4        5   28  ...         617.949831       Medium_Spender
+
+[5 rows x 13 columns]
+
+Future Spending Tier Value Counts:
+ future_spending_tier
+No_Future_Spend    477
+High_Spender        43
+Medium_Spender      41
+Low_Spender         41
+Name: count, dtype: int64
+
+Shape of X_train: (421, 9)
+Shape of X_test: (181, 9)
+Shape of y_train: (421,)
+Shape of y_test: (181,)
+
+--- Visualizations Generated ---
+
+--- Training Machine Learning Model ---
+Model training complete.
+
+--- Model Evaluation ---
+Accuracy Score: 0.8177
+
+Classification Report:
+                  precision    recall  f1-score   support
+
+   High_Spender       0.55      0.46      0.50        13
+    Low_Spender       0.00      0.00      0.00        12
+ Medium_Spender       1.00      0.08      0.15        12
+No_Future_Spend       0.83      0.98      0.90       144
+
+       accuracy                           0.82       181
+      macro avg       0.59      0.38      0.39       181
+   weighted avg       0.77      0.82      0.76       181
+
+
+Script execution complete.
