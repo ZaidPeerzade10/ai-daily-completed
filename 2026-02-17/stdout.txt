@@ -1,0 +1,55 @@
+1. Generating Synthetic Data...
+  Generated students_df with 602 rows.
+  Generated courses_df with 90 rows.
+  Generated enrollments_df with 951 rows.
+  Generated activity_logs_df with 5893 rows.
+
+2. Loading data into SQLite and performing SQL Feature Engineering...
+  Global analysis date set to: 2027-08-24
+  Early engagement window: 30 days.
+  SQL query executed. Fetched 951 enrollment features.
+  First 5 rows of enrollment_features_df:
+   enrollment_id  ...  early_activity_frequency
+0          20001  ...                  0.000000
+1          20002  ...                  0.100000
+2          20003  ...                  0.100000
+3          20004  ...                  0.366667
+4          20005  ...                  0.033333
+
+[5 rows x 16 columns]
+
+3. Performing Pandas Feature Engineering and Data Splitting...
+  Data split into training (665 samples) and testing (286 samples).
+  Target variable (is_completed_course) distribution in train: 
+is_completed_course
+1    0.535338
+0    0.464662
+Name: proportion, dtype: float64
+  Target variable (is_completed_course) distribution in test: 
+is_completed_course
+1    0.534965
+0    0.465035
+Name: proportion, dtype: float64
+
+4. Generating Data Visualizations...
+  Plots displayed: Violin plot for early time spent, Stacked bar for difficulty vs. completion.
+
+5. Building ML Pipeline, Training, and Evaluating...
+  Training the HistGradientBoostingClassifier model...
+  Model training complete.
+
+--- Model Evaluation on Test Set ---
+ROC AUC Score: 0.6940
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.60      0.58      0.59       133
+           1       0.64      0.66      0.65       153
+
+    accuracy                           0.62       286
+   macro avg       0.62      0.62      0.62       286
+weighted avg       0.62      0.62      0.62       286
+
+
+Script execution complete.
