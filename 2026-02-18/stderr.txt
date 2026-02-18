@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/runner/work/ai-daily-runner/ai-daily-runner/workspace/2026-02-18/solution_attempt_3.py", line 9, in <module>
+    from sklearn.preprocessing import StandardScaler, OneHotEncoder, SimpleImputer
+ImportError: cannot import name 'SimpleImputer' from 'sklearn.preprocessing' (/opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/sklearn/preprocessing/__init__.py)
