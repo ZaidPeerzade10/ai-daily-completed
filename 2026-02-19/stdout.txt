@@ -1,0 +1,31 @@
+--- 1. Generating Synthetic Data ---
+Generated users_df with 602 rows.
+Generated offers_df with 89 rows.
+Generated campaign_exposures_df with 7659 rows. Overall conversion rate: 0.12
+
+--- 2. Loading to SQLite and SQL Feature Engineering ---
+SQL query executed. Resulting DataFrame has 7659 rows and 19 columns.
+
+--- 3. Pandas Feature Engineering & Binary Target Creation ---
+Data split into training (n=5361) and testing (n=2298) sets.
+
+--- 4. Generating Data Visualizations ---
+
+--- 5. Building and Evaluating ML Pipeline ---
+Training the HistGradientBoostingClassifier...
+Training complete.
+
+ROC AUC Score on Test Set: 0.5661
+
+Classification Report on Test Set:
+              precision    recall  f1-score   support
+
+           0       0.88      1.00      0.94      2031
+           1       0.25      0.00      0.01       267
+
+    accuracy                           0.88      2298
+   macro avg       0.57      0.50      0.47      2298
+weighted avg       0.81      0.88      0.83      2298
+
+
+--- Script Finished ---
