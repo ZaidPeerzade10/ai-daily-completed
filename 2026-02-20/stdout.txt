@@ -1,0 +1,69 @@
+--- Generating Synthetic Data ---
+Generated 602 users.
+   user_id signup_date region  age  is_fraudulent
+0        0  2021-12-30  South   56              0
+1        1  2020-05-10   West   34              1
+2        2  2021-07-18  North   56              0
+3        3  2021-02-04   East   39              0
+4        4  2020-12-31   West   43              0
+Generated 6093 transactions.
+   user_id transaction_date  ...  location_country transaction_id
+0        0       2022-02-23  ...            Mexico           1557
+1        0       2023-02-09  ...             Japan           1234
+2        0       2023-09-18  ...            Mexico            779
+3        0       2024-02-14  ...                UK           4907
+4        0       2024-09-24  ...            Mexico            165
+
+[5 rows x 6 columns]
+
+--- Loading Data into SQLite and SQL Feature Engineering ---
+Global Analysis Date: 2026-01-24
+Feature Cutoff Date: 2025-10-26
+
+SQL Feature Engineering Results (head):
+   user_id  ...  transaction_span_days_pre_cutoff
+0        0  ...                             959.0
+1        1  ...                              82.0
+2        2  ...                             968.0
+3        3  ...                            1001.0
+4        4  ...                             776.0
+
+[5 rows x 13 columns]
+
+--- Pandas Feature Engineering ---
+   user_id  ...  avg_transaction_per_span_pre_cutoff
+0        0  ...                             0.006250
+1        1  ...                             0.168675
+2        2  ...                             0.018576
+3        3  ...                             0.015968
+4        4  ...                             0.016731
+
+[5 rows x 16 columns]
+DataFrame shape after Pandas FE: (602, 16)
+
+Train set size: 421 samples
+Test set size: 181 samples
+Fraudulent cases in training set: 31 (7.36%)
+Fraudulent cases in test set: 13 (7.18%)
+
+--- Data Visualization ---
+
+--- ML Pipeline & Evaluation ---
+
+Training the ML model...
+Model training complete.
+
+ROC AUC Score on Test Set: 1.0000
+
+Classification Report on Test Set:
+                    precision    recall  f1-score   support
+
+Not Fraudulent (0)       1.00      1.00      1.00       168
+    Fraudulent (1)       1.00      1.00      1.00        13
+
+          accuracy                           1.00       181
+         macro avg       1.00      1.00      1.00       181
+      weighted avg       1.00      1.00      1.00       181
+
+
+--- Script Finished ---
