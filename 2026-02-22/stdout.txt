@@ -1,0 +1,64 @@
+--- 1. Generating Synthetic Data ---
+Generated 638 customers and 7937 messages.
+Customers DataFrame head:
+   customer_id signup_date   region account_tier
+0            1  2023-12-23  Central       Bronze
+1            2  2022-01-05     East         Gold
+2            3  2025-12-16     East       Bronze
+3            4  2021-04-28     West       Bronze
+4            5  2022-01-29    South         Gold
+
+Messages DataFrame head:
+   message_id  ...  actual_response_time_hours
+0        1577  ...                        7.42
+1        4197  ...                       41.00
+2        4829  ...                       60.99
+3        2299  ...                       19.34
+4        4035  ...                       32.85
+
+[5 rows x 5 columns]
+
+--- 2. Loading into SQLite & SQL Feature Engineering ---
+SQL Feature Engineering complete. Resulting DataFrame head:
+   message_id  ...  days_since_last_user_message
+0        1577  ...                           314
+1        4197  ...                            21
+2        4829  ...                            54
+3        2299  ...                            80
+4        4035  ...                           131
+
+[5 rows x 11 columns]
+DataFrame shape after SQL: (7937, 11)
+
+--- 3. Pandas Feature Engineering & Multi-Class Target Creation ---
+X_train shape: (5555, 11), y_train shape: (5555,)
+X_test shape: (2382, 11), y_test shape: (2382,)
+
+Target distribution in training set:
+message_intent_category
+Standard_Support    0.542934
+Urgent_Support      0.302430
+Low_Priority        0.154635
+Name: proportion, dtype: float64
+
+Target distribution in test set:
+message_intent_category
+Standard_Support    0.542821
+Urgent_Support      0.302687
+Low_Priority        0.154492
+Name: proportion, dtype: float64
+
+DataFrame with new features and target head:
+   message_id  ...  message_intent_category
+0        1577  ...           Urgent_Support
+1        4197  ...         Standard_Support
+2        4829  ...             Low_Priority
+3        2299  ...         Standard_Support
+4        4035  ...         Standard_Support
+
+[5 rows x 5 columns]
+
+--- 4. Data Visualization ---
+
+--- 5. ML Pipeline & Evaluation (Multi-Class) ---
+Training the ML pipeline...
