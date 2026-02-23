@@ -1,0 +1,23 @@
+Here are the implementation steps for the Data Science task, designed for a Python ML engineer:
+
+1.  **Generate Synthetic Customer and Message Data**:
+    Create two pandas DataFrames. First, generate `customers_df` with 500-700 unique customer IDs, signup dates spread over the last five years, and randomly assigned regions and account tiers. Second, generate `messages_df` with 5000-8000 unique message IDs. Assign each message to a random customer ID from `customers_df`, ensuring the `message_date` is always after the assigned customer's `signup_date`. Synthetically create `message_text` to imply a hidden intent (e.g., 'Billing_Issue', 'Technical_Support', 'Feature_Request', 'General_Inquiry') using specific keywords. Assign `actual_response_time_hours` based on this hidden intent, with 'Billing_Issue' and 'Technical_Support' messages generally having shorter response times. Finally, sort `messages_df` by `customer_id` then `message_date`.
+
+2.  **Load Data into SQLite and Engineer SQL Features**:
+    Initialize an in-memory SQLite database connection. Load the `customers_df` into a table named `customers` and `messages_df` into a table named `messages`. Construct a single SQL query that joins the `messages` and `customers` tables. Within this query, calculate the following sequential features for each message using window functions: the count of a user's prior messages (`user_prior_message_count`), the average response time of a user's prior messages (`user_avg_prior_response_time_hours`), and the days since the user's last message (`days_since_last_user_message`). For a user's first message, `days_since_last_user_message` should represent the days between `signup_date` and `message_date`, and prior aggregates should be 0.0. The query should return `message_id`, `customer_id`, `message_date`, `message_text`, `region`, `account_tier`, `signup_date`, the newly engineered sequential features, and `actual_response_time_hours`.
+
+3.  **Perform Pandas Feature Engineering and Define Target Variable**:
+    Fetch the results of the SQL query into a new pandas DataFrame, `message_features_df`. Convert `signup_date` and `message_date` columns to datetime objects. Handle any `NaN` values from the SQL-engineered features by filling `user_prior_message_count` with 0, `user_avg_prior_response_time_hours` with 0.0, and `days_since_last_user_message` with a large sentinel value (e.g., 9999) if not already handled by the SQL query. Create new features: `user_account_age_at_message_days` (difference between `message_date` and `signup_date`), `message_length`, `has_question_mark` (binary based on `message_text`), `num_keywords_billing`, and `num_keywords_tech` (counts of defined keywords in `message_text`). Create the multi-class target variable `message_intent_category` based on `actual_response_time_hours`: 'Urgent_Support' (<12 hours), 'Standard_Support' (12-48 hours), and 'Low_Priority' (>48 hours). Finally, define the feature matrix `X` (including numerical, categorical, and the raw `message_text` columns) and the target vector `y` (`message_intent_category`). Split `X` and `y` into training and testing sets (e.g., 70/30) using a fixed `random_state` and `stratify` to maintain class proportions.
+
+4.  **Visualize Key Relationships**:
+    Generate two plots to understand the data:
+    *   A violin plot (or box plot) illustrating the distribution of `message_length` for each `message_intent_category`, providing insights into whether message length varies by intent urgency.
+    *   A stacked bar chart showing the distribution of `message_intent_category` across different `account_tier` values, to examine if customer tier influences message intent.
+    Ensure both plots are clearly titled and have appropriate axis labels.
+
+5.  **Build and Evaluate Machine Learning Pipeline**:
+    Construct an `sklearn.pipeline.Pipeline` for the multi-class classification task. Integrate a `sklearn.compose.ColumnTransformer` for preprocessing different feature types:
+    *   For numerical features, apply `SimpleImputer` (strategy='mean') followed by `StandardScaler`.
+    *   For categorical features, apply `OneHotEncoder` (handle_unknown='ignore').
+    *   For the raw `message_text` feature, apply `TfidfVectorizer` (with `max_features=500`).
+    Set `sklearn.ensemble.HistGradientBoostingClassifier` as the final estimator in the pipeline, using a fixed `random_state`. Train this pipeline on the `X_train` and `y_train` datasets. Use the trained pipeline to make predictions on `X_test`. Finally, calculate and print the `accuracy_score` and a comprehensive `classification_report` to evaluate the model's performance on the test set.
