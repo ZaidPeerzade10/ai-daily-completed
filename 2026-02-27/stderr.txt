@@ -1,0 +1,77 @@
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pandas/io/sql.py", line 2664, in execute
+    cur.execute(sql, *args)
+sqlite3.OperationalError: near "NULLS": syntax error
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/runner/work/ai-daily-runner/ai-daily-runner/workspace/2026-02-27/solution_attempt_3.py", line 339, in <module>
+    ad_features_df = load_to_sqlite_and_feature_engineer(users_df, ads_df, impressions_df)
+  File "/home/runner/work/ai-daily-runner/ai-daily-runner/workspace/2026-02-27/solution_attempt_3.py", line 191, in load_to_sqlite_and_feature_engineer
+    ad_features_df = pd.read_sql_query(sql_query, conn)
+  File "/opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pandas/io/sql.py", line 528, in read_sql_query
+    return pandas_sql.read_query(
+  File "/opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pandas/io/sql.py", line 2728, in read_query
+    cursor = self.execute(sql, params)
+  File "/opt/hostedtoolcache/Python/3.10.19/x64/lib/python3.10/site-packages/pandas/io/sql.py", line 2676, in execute
+    raise ex from exc
+pandas.errors.DatabaseError: Execution failed on sql '
+    WITH RankedImpressions AS (
+        SELECT
+            imp.impression_id,
+            imp.user_id,
+            imp.ad_id,
+            imp.impression_date,
+            imp.was_clicked,
+            usr.signup_date,
+            usr.age,
+            usr.gender,
+            usr.device_type,
+            usr.ad_blocker_enabled,
+            ad.advertiser_category,
+            ad.ad_format,
+            ad.target_audience_age_min,
+            ad.target_audience_age_max,
+            -- For User-level sequential features
+            COUNT(imp.impression_id) OVER (PARTITION BY imp.user_id ORDER BY imp.impression_date, imp.impression_id ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS user_prior_impressions_raw,
+            SUM(imp.was_clicked) OVER (PARTITION BY imp.user_id ORDER BY imp.impression_date, imp.impression_id ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS user_prior_clicks_raw,
+            LAG(CASE WHEN imp.was_clicked = 1 THEN imp.impression_date END, 1, usr.signup_date) 
+                IGNORE NULLS OVER (PARTITION BY imp.user_id ORDER BY imp.impression_date, imp.impression_id) AS user_last_click_date,
+            -- For Ad-level sequential features
+            COUNT(imp.impression_id) OVER (PARTITION BY imp.ad_id ORDER BY imp.impression_date, imp.impression_id ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS ad_prior_impressions_raw,
+            SUM(imp.was_clicked) OVER (PARTITION BY imp.ad_id ORDER BY imp.impression_date, imp.impression_id ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS ad_prior_clicks_raw
+        FROM
+            impressions imp
+        JOIN
+            users usr ON imp.user_id = usr.user_id
+        JOIN
+            ads ad ON imp.ad_id = ad.ad_id
+    )
+    SELECT
+        impression_id,
+        user_id,
+        ad_id,
+        impression_date,
+        was_clicked,
+        age,
+        gender,
+        device_type,
+        ad_blocker_enabled,
+        advertiser_category,
+        ad_format,
+        target_audience_age_min,
+        target_audience_age_max,
+        signup_date,
+        COALESCE(user_prior_impressions_raw, 0) AS user_prior_impressions,
+        COALESCE(user_prior_clicks_raw, 0) AS user_prior_clicks,
+        CAST(COALESCE(user_prior_clicks_raw, 0) AS REAL) / NULLIF(COALESCE(user_prior_impressions_raw, 0), 0) AS user_prior_ctr,
+        CAST(JULIANDAY(impression_date) - JULIANDAY(COALESCE(user_last_click_date, signup_date)) AS INTEGER) AS days_since_last_user_click,
+        COALESCE(ad_prior_impressions_raw, 0) AS ad_prior_impressions,
+        COALESCE(ad_prior_clicks_raw, 0) AS ad_prior_clicks,
+        CAST(COALESCE(ad_prior_clicks_raw, 0) AS REAL) / NULLIF(COALESCE(ad_prior_impressions_raw, 0), 0) AS ad_prior_ctr
+    FROM
+        RankedImpressions
+    ORDER BY
+        user_id, impression_date, impression_id;
+    ': near "NULLS": syntax error

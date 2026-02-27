@@ -1,0 +1,7 @@
+1. Generating Synthetic Data...
+Generated 622 users.
+Generated 55 ads.
+Generated 6620 impressions. Actual CTR: 0.0343
+
+2. Loading into SQLite and SQL Feature Engineering...
+Data loaded into SQLite tables: users, ads, impressions.
