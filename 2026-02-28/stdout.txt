@@ -1,0 +1,44 @@
+Generated 602 users, 3498 sessions, 10424 events.
+High value sessions: 575 (16.44%)
+
+SQL Feature Engineering completed. Shape of session_features_df: (3498, 14)
+Sample of session_features_df after SQL aggregation:
+   session_id  user_id  ... time_to_first_event_seconds  time_to_last_event_seconds
+0           0      539  ...                         9.0                        33.0
+1           1      562  ...                       214.0                      1001.0
+2           2      490  ...                       827.0                      1724.0
+3           3      441  ...                         0.0                        97.0
+4           4      260  ...                       281.0                       731.0
+
+[5 rows x 14 columns]
+
+Data split into training (2448 samples) and testing (1050 samples).
+Target distribution in training set:
+is_high_value_session
+0    0.835784
+1    0.164216
+Name: proportion, dtype: float64
+Target distribution in test set:
+is_high_value_session
+0    0.835238
+1    0.164762
+Name: proportion, dtype: float64
+
+Generating visualizations...
+
+Building and evaluating ML Pipeline...
+
+ROC AUC Score on Test Set: 0.5409
+
+Classification Report on Test Set:
+              precision    recall  f1-score   support
+
+           0       0.84      0.97      0.90       877
+           1       0.20      0.04      0.07       173
+
+    accuracy                           0.82      1050
+   macro avg       0.52      0.50      0.48      1050
+weighted avg       0.73      0.82      0.76      1050
+
+
+Script execution complete.
