@@ -1,0 +1,61 @@
+Simulated 5000 customers and 505562 usage events.
+Number of churned customers in simulation: 1132
+--------------------------------------------------
+Global Analysis Date: 2023-09-15
+Feature Window Duration: 60 days
+Feature Cutoff Date: 2023-07-17
+Churn Observation Period Duration: 90 days
+Churn Observation End Date: 2023-10-15
+--------------------------------------------------
+Generated static and account age features.
+--------------------------------------------------
+Generated time-windowed usage features.
+Shape of features_df after feature engineering: (5000, 19)
+--------------------------------------------------
+Target variable 'is_churned' created.
+Excluded 604 customers who churned before or on feature_cutoff_date.
+Remaining customers for modeling: 4396
+Churned customers in target dataset: 399 (9.08% of total)
+--------------------------------------------------
+Data split into training (3516 samples) and test (880 samples) sets.
+Numerical features: ['account_age_at_feature_cutoff', 'total_events_last_60_days', 'distinct_event_types_last_60_days', 'login_count_last_60_days', 'feature_A_usage_count_last_60_days', 'feature_B_usage_count_last_60_days', 'support_contact_count_last_60_days', 'avg_event_value_last_60_days', 'std_event_value_last_60_days', 'sum_event_value_last_60_days', 'avg_daily_events_last_60_days', 'days_since_last_activity', 'support_contact_ratio_last_60_days']
+Categorical features: ['region', 'account_type', 'subscription_plan']
+--------------------------------------------------
+Training the Random Forest Classifier...
+Training complete.
+
+--- Model Evaluation on Test Set ---
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.91      0.97      0.94       800
+           1       0.07      0.03      0.04        80
+
+    accuracy                           0.88       880
+   macro avg       0.49      0.50      0.49       880
+weighted avg       0.83      0.88      0.86       880
+
+
+Confusion Matrix:
+[[774  26]
+ [ 78   2]]
+True Negatives: 774, False Positives: 26
+False Negatives: 78, True Positives: 2
+
+ROC AUC Score: 0.5229
+Precision (churn class): 0.0714
+Recall (churn class): 0.0250
+F1-Score (churn class): 0.0370
+--------------------------------------------------
+
+--- High-Level Deployment and Monitoring Considerations ---
+This trained model can be deployed as an API endpoint to score new customers periodically.
+When predicting for a new customer (e.g., CUST_NEW), the same feature engineering pipeline (steps 3-4) would be applied:
+  1. Define a current 'global_analysis_date' (e.g., today's date).
+  2. Calculate 'feature_cutoff_date' (today - 60 days).
+  3. Extract static features and calculate 'account_age_at_feature_cutoff'.
+  4. Aggregate usage events for CUST_NEW within the last 60 days leading up to 'feature_cutoff_date'.
+  5. Use the preprocessor and trained classifier to get a churn probability for CUST_NEW.
+Continuous monitoring of model performance (e.g., ROC AUC, precision/recall for actual churn vs. predicted churn) is crucial.
+Data drift (changes in feature distributions) and concept drift (changes in churn behavior patterns) necessitate periodic retraining of the model with fresh data.
+This script provides a solid foundation for a comprehensive churn prediction system.
