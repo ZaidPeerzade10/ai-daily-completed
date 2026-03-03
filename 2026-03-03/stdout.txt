@@ -1,0 +1,34 @@
+Starting solution script...
+
+--- Task 1: Generating Synthetic Data ---
+Generated 622 users and 11373 transactions.
+Actual fraud rate: 2.19%
+Synthetic data generation complete.
+
+--- Task 2: Loading into SQLite & SQL Feature Engineering ---
+SQL feature engineering complete. 11373 transactions with engineered features.
+First 5 rows of SQL-engineered data:
+   transaction_id  ...  user_prior_countries_last_5_tx_str
+0            1628  ...                                None
+1           10861  ...                                 USA
+2            7788  ...                             USA,USA
+3            1533  ...                      USA,USA,Mexico
+4            9444  ...               USA,USA,Mexico,France
+
+[5 rows x 15 columns]
+
+--- Task 3: Pandas Feature Engineering & Binary Target Creation ---
+Pandas feature engineering complete.
+First 5 rows with new Pandas-engineered features:
+   transaction_id       amount  ...  transaction_velocity_30d  is_fraudulent
+0            1628   363.313692  ...                  0.000000              0
+1           10861  2722.712262  ...                  0.066667              0
+2            7788  2055.523299  ...                  0.000000              0
+3            1533  1986.579657  ...                  0.000000              0
+4            9444  4792.688487  ...                  0.100000              0
+
+[5 rows x 6 columns]
+Data split into training (7961 samples) and testing (3412 samples).
+Fraud rate in training: 2.19%, in testing: 2.20%
+
+--- Task 4: Data Visualization ---
