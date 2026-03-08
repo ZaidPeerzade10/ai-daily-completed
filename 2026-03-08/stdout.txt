@@ -1,0 +1,27 @@
+--- Synthetic Data Generation Complete ---
+Developers DF shape: (663, 4)
+Bug Reports DF shape: (5456, 7)
+
+Priority Level Distribution (Raw):
+priority_level
+High      0.520711
+Medium    0.410924
+Low       0.068365
+Name: proportion, dtype: float64
+
+--- SQLite & SQL Feature Engineering Complete ---
+Combined Bug Features DF shape: (5456, 10)
+   bug_id  ...  reporter_avg_bugs_resolved_per_month
+0       1  ...                                  14.9
+1       2  ...                                   2.9
+2       3  ...                                   8.4
+3       4  ...                                   2.7
+4       5  ...                                  14.5
+
+[5 rows x 10 columns]
+
+--- Pandas Feature Engineering Complete ---
+X_train shape: (3819, 10), y_train shape: (3819,)
+X_test shape: (1637, 10), y_test shape: (1637,)
+
+Training set priority distribution:
