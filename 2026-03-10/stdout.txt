@@ -1,0 +1,46 @@
+--- 1. Generating Synthetic Data ---
+Generated 605 users.
+Generated 277 content items.
+Generated 12282 recommendations with a 8.12% click rate.
+--- Synthetic data generation complete. ---
+
+--- 2. Loading into SQLite & SQL Feature Engineering ---
+Generated 605 user initial feature rows from SQL.
+--- SQL Feature Engineering complete. ---
+
+--- 3. Pandas Feature Engineering & Multi-Class Target Creation ---
+Global analysis date set to: 2027-02-22
+X_train shape: (423, 10), y_train shape: (423,)
+X_test shape: (182, 10), y_test shape: (182,)
+Future Engagement Tier distribution in training set:
+future_engagement_tier
+Medium_Engagement       0.300236
+High_Engagement         0.269504
+Low_Engagement          0.217494
+Very_High_Engagement    0.212766
+Name: proportion, dtype: float64
+--- Pandas Feature Engineering & Target Creation complete. ---
+
+--- 4. Data Visualization ---
+--- Data Visualization complete. ---
+
+--- 5. ML Pipeline & Evaluation ---
+Model training complete.
+
+Model Accuracy on Test Set: 0.2857
+
+Classification Report on Test Set:
+                      precision    recall  f1-score   support
+
+     High_Engagement       0.26      0.27      0.26        49
+      Low_Engagement       0.27      0.30      0.28        40
+   Medium_Engagement       0.39      0.37      0.38        54
+Very_High_Engagement       0.19      0.18      0.19        39
+
+            accuracy                           0.29       182
+           macro avg       0.28      0.28      0.28       182
+        weighted avg       0.29      0.29      0.29       182
+
+--- ML Pipeline & Evaluation complete. ---
+
+--- Script Finished ---
