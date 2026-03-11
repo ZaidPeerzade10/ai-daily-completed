@@ -1,0 +1,44 @@
+--- Synthetic Data Generated ---
+Users: 602 rows
+Content: 5920 rows
+Moderation: 673 rows
+Overall spam rate in moderation_df: 8.02%
+------------------------------
+--- SQL Feature Engineering Complete ---
+Engineered DataFrame shape: (5920, 14)
+   user_id   post_date  ...  days_since_last_user_post  is_spam
+0        0  2023-04-16  ...                      113.0      NaN
+1        0  2024-04-20  ...                      370.0      NaN
+2        0  2025-10-29  ...                      557.0      NaN
+3        0  2026-01-28  ...                       91.0      NaN
+4        0  2026-03-24  ...                       55.0      NaN
+
+[5 rows x 6 columns]
+------------------------------
+--- Pandas Feature Engineering & Data Split Complete ---
+X_train shape: (4144, 10), y_train shape: (4144,)
+X_test shape: (1776, 10), y_test shape: (1776,)
+Spam rate in y_train: 0.92%
+Spam rate in y_test: 0.90%
+------------------------------
+--- Generating Visualizations ---
+Saved 'reputation_score_vs_spam.png'
+Saved 'account_status_vs_spam_stacked_bar.png'
+------------------------------
+--- Training ML Pipeline ---
+Pipeline training complete.
+
+--- Model Evaluation ---
+Test ROC AUC Score: 0.5962
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.99      1.00      1.00      1760
+           1       0.00      0.00      0.00        16
+
+    accuracy                           0.99      1776
+   macro avg       0.50      0.50      0.50      1776
+weighted avg       0.98      0.99      0.99      1776
+
+------------------------------
