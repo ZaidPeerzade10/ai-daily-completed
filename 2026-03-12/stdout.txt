@@ -1,0 +1,34 @@
+--- Data Generation Summary ---
+Users: 663
+Offers: 57
+Interactions: 8102
+Overall Redemption Rate: 29.05%
+
+--- SQL Feature Engineering Complete ---
+DataFrame shape after SQL: (8102, 22)
+
+--- Pandas Feature Engineering Complete ---
+X_train shape: (5671, 17), y_train shape: (5671,)
+X_test shape: (2431, 17), y_test shape: (2431,)
+
+--- Generating Visualizations ---
+Plots saved as user_prior_redemption_rate_violin.png and offer_type_redemption_stacked_bar.png
+
+--- Building and Training ML Pipeline ---
+ML Pipeline trained successfully.
+
+--- Model Evaluation ---
+ROC AUC Score on Test Set: 0.5575
+
+Classification Report on Test Set:
+               precision    recall  f1-score   support
+
+           0       0.72      0.94      0.82      1725
+           1       0.42      0.11      0.17       706
+
+    accuracy                           0.70      2431
+   macro avg       0.57      0.52      0.49      2431
+weighted avg       0.63      0.70      0.63      2431
+
+
+--- Script Finished Successfully ---
