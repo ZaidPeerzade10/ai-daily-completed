@@ -1,0 +1,5 @@
+/home/runner/work/ai-daily-runner/ai-daily-runner/workspace/2026-03-14/solution_attempt_2.py:283: FutureWarning: 
+
+Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `x` variable to `hue` and set `legend=False` for the same effect.
+
+  sns.violinplot(x='is_helpful', y='review_length_chars', data=review_features_df, palette='viridis')

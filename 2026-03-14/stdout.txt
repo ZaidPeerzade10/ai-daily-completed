@@ -1,0 +1,53 @@
+--- Generating Synthetic Data ---
+Generated 602 users.
+Generated 102 products.
+Generated 10556 reviews.
+Overall helpfulness rate: 49.84%
+
+--- Loading Data into SQLite and SQL Feature Engineering ---
+SQL query executed and fetched 10556 rows with engineered features.
+Sample of SQL engineered features:
+   review_id  ...  days_since_product_first_review
+0       4868  ...                              1.0
+1       7413  ...                              NaN
+2       3566  ...                              NaN
+3       3828  ...                              1.0
+4       7325  ...                              NaN
+
+[5 rows x 10 columns]
+
+--- Pandas Feature Engineering & Binary Target Creation ---
+Shape of X_train: (7389, 15), y_train: (7389,)
+Shape of X_test: (3167, 15), y_test: (3167,)
+Class distribution in y_train:
+is_helpful
+0    0.501556
+1    0.498444
+Name: proportion, dtype: float64
+Class distribution in y_test:
+is_helpful
+0    0.501737
+1    0.498263
+Name: proportion, dtype: float64
+
+--- Data Visualization ---
+
+--- ML Pipeline & Evaluation ---
+Training the HistGradientBoostingClassifier model...
+Model training complete.
+
+--- Model Evaluation on Test Set ---
+ROC AUC Score: 0.6794
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.63      0.65      0.64      1589
+           1       0.63      0.61      0.62      1578
+
+    accuracy                           0.63      3167
+   macro avg       0.63      0.63      0.63      3167
+weighted avg       0.63      0.63      0.63      3167
+
+
+--- Script Finished ---
