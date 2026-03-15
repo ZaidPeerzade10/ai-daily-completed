@@ -1,0 +1,52 @@
+Synthetic Data Generation Complete:
+  Customers: 602 rows
+  Purchases: 6861 rows
+  Browsing: 13979 rows
+
+SQL Feature Engineering Complete. Sample `customer_features_df` head:
+   customer_id  ... has_browsed_checkout_page_first_60d
+0            1  ...                                   1
+1            2  ...                                   1
+2            3  ...                                   0
+3            4  ...                                   0
+4            5  ...                                   0
+
+[5 rows x 12 columns]
+
+Pandas Feature Engineering & Target Creation Complete.
+LTV Tier distribution:
+future_ltv_tier
+Very_High_LTV    197
+High_LTV         191
+Medium_LTV       191
+Low_LTV           23
+Name: count, dtype: int64
+
+Sample `customer_features_df` with target head:
+   customer_id  total_future_spend future_ltv_tier acquisition_channel
+0            1        18346.152687   Very_High_LTV            Referral
+1            2         9261.315829        High_LTV            Referral
+2            3         6002.730834      Medium_LTV         Paid_Social
+3            4         5428.510181      Medium_LTV         Paid_Social
+4            5         4352.237301      Medium_LTV         Paid_Social
+
+Data Visualizations Displayed.
+
+Training ML Pipeline...
+ML Pipeline Training Complete.
+
+ML Model Evaluation:
+Accuracy: 0.3978
+
+Classification Report:
+               precision    recall  f1-score   support
+
+     High_LTV       0.27      0.17      0.21        58
+      Low_LTV       0.62      0.71      0.67         7
+   Medium_LTV       0.34      0.42      0.38        57
+Very_High_LTV       0.50      0.56      0.53        59
+
+     accuracy                           0.40       181
+    macro avg       0.43      0.47      0.45       181
+ weighted avg       0.38      0.40      0.38       181
+
