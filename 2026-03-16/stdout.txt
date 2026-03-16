@@ -1,0 +1,10 @@
+--- Step 1: Generating Synthetic Data ---
+Generated users_df with 602 rows.
+Generated sessions_df with 9387 rows.
+Generated page_views_df with 27697 rows.
+Synthetic data generation complete.
+
+--- Step 2: Loading data into SQLite and SQL Feature Engineering ---
+SQL feature engineering complete. Resulting DataFrame has 602 rows.
+
+--- Step 3: Pandas Feature Engineering & Binary Target Creation ---

@@ -1,0 +1,22 @@
+Here are the implementation steps for predicting user retention based on initial web behavior:
+
+1.  **Generate Synthetic Datasets with Realistic Patterns**:
+    Create three pandas DataFrames: `users_df` (unique user details), `sessions_df` (user activity sessions), and `page_views_df` (individual page views within sessions). Ensure `signup_date` and `session_start_time` relationships are logical. Crucially, simulate a retention pattern by biasing early session metrics (e.g., `session_duration_seconds`, `num_page_views`), page view categories (e.g., 'Product_Page', 'Cart_Page'), and user attributes (e.g., `acquisition_channel`, `device_type`) for users who are intended to be "retained" later. Finally, sort `sessions_df` by `user_id` then `session_start_time`, and `page_views_df` by `session_id` then `view_time_seconds`.
+
+2.  **Load Data into SQLite and Engineer Initial 7-Day Features via SQL**:
+    Establish an in-memory SQLite database. Load `users_df`, `sessions_df`, and `page_views_df` into separate tables named `users`, `sessions`, and `page_views`. Construct a single SQL query that, for each `user_id`, identifies their `initial_behavior_cutoff_date` (i.e., `signup_date + 7 days`). The query must then aggregate session and page view metrics *only* within this 7-day window. This aggregation should include `num_sessions_first_7d`, `total_session_duration_first_7d`, `avg_session_duration_first_7d`, `total_page_views_first_7d`, `num_product_page_views_first_7d`, `num_cart_page_views_first_7d`, `days_with_activity_first_7d`, and `avg_page_views_per_session_first_7d`. Ensure the query uses `LEFT JOIN`s to include all users, even those with no activity in the first 7 days, filling their aggregated features with appropriate zeros or zero floats. The output should also include `user_id`, `signup_date`, `acquisition_channel`, and `device_type`.
+
+3.  **Engineer Additional Pandas Features and Create Binary Retention Target**:
+    Fetch the results from the SQL query into a pandas DataFrame (`user_initial_features_df`). Handle `NaN` values resulting from the `LEFT JOIN`s by filling count/sum columns with 0 and average columns with 0.0. Convert `signup_date` to datetime objects. Calculate new Pandas-based features: `account_age_at_cutoff_days` (which will be 7), `engagement_ratio_first_7d`, and `session_frequency_first_7d`. Then, create the binary target variable `is_retained_after_30_days`: For each user, define a `retention_start_date` (`signup_date + 30 days`) and `retention_end_date` (`signup_date + 90 days`). Check the *original* `sessions_df` for any sessions within this 60-day window for each user. Assign `1` if at least one such session exists, otherwise `0`. This requires a left merge of aggregated retention data back to `user_initial_features_df`, filling `NaN`s with 0 for non-retained users. Finally, define your feature set `X` (numerical and one-hot encoded categorical columns) and target `y`, then split them into training and testing sets using a stratified split.
+
+4.  **Visualize Key Relationships with Retention Target**:
+    Generate two distinct plots to visually explore the relationship between initial behavior features and the `is_retained_after_30_days` target:
+    *   A violin plot (or box plot) illustrating the distribution of `total_session_duration_first_7d` for retained (1) versus non-retained (0) users.
+    *   A stacked bar chart displaying the proportion of retained (1) and non-retained (0) users across each `acquisition_channel`.
+    Ensure both plots have clear titles and axis labels.
+
+5.  **Build and Evaluate an ML Pipeline for Retention Prediction**:
+    Construct an `sklearn.pipeline.Pipeline`. The pipeline should start with a `sklearn.compose.ColumnTransformer` for preprocessing:
+    *   Apply `SimpleImputer(strategy='mean')` followed by `StandardScaler` to all numerical features.
+    *   Apply `OneHotEncoder(handle_unknown='ignore')` to all categorical features.
+    The final estimator in the pipeline should be an `HistGradientBoostingClassifier` with a fixed `random_state`. Train this pipeline using the `X_train` and `y_train` datasets. Predict probabilities for the positive class (retained users) on the `X_test` set. Calculate and print the `roc_auc_score` and a detailed `classification_report` for the test set predictions.
