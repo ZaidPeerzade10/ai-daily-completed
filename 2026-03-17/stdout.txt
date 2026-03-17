@@ -1,0 +1,95 @@
+--- Generating Synthetic Data ---
+Generated 177 products.
+Generated 16518 user interactions.
+Generated 3953 sales records.
+
+Sample products_df:
+   product_id launch_date  ... marketing_spend_at_launch  hidden_success_score
+0           1  2021-10-13  ...              40823.486928              0.881486
+1           2  2021-09-26  ...              34757.967107              0.604213
+2           3  2021-09-03  ...              18160.479123              0.511650
+3           4  2021-02-21  ...              37046.024965              0.660672
+4           5  2021-05-21  ...              28728.672884              0.550859
+
+[5 rows x 6 columns]
+
+Sample user_interactions_df:
+   interaction_id  user_id  ...  interaction_type duration_seconds
+0               1       61  ...              View       392.293467
+1               2     8055  ...             Share         0.000000
+2               3     4263  ...       Add_to_Cart         0.000000
+3               4     6810  ...             Share         0.000000
+4               5      125  ...       Add_to_Cart         0.000000
+
+[5 rows x 6 columns]
+
+Sample sales_df:
+   sale_id  product_id  sale_date  quantity_sold
+0        1           1 2021-10-20             10
+1        2           1 2021-11-26             10
+2        3           1 2021-10-14              8
+3        4           1 2021-10-26              7
+4        5           1 2021-10-27              8
+
+--- SQL Feature Engineering ---
+Generated 177 product features using SQL.
+
+Sample product_features_df after SQL aggregation:
+   product_id  ... days_from_launch_to_first_interaction
+0           1  ...                                   1.0
+1           2  ...                                   1.0
+2           3  ...                                   1.0
+3           4  ...                                   1.0
+4           5  ...                                   1.0
+
+[5 rows x 11 columns]
+
+--- Pandas Feature Engineering & Target Creation ---
+
+DataFrame shape: (177, 15)
+X_train shape: (123, 11), X_test shape: (54, 11)
+y_train class distribution:
+product_success_tier
+Medium_Success       0.325203
+Very_High_Success    0.325203
+High_Success         0.300813
+Low_Success          0.048780
+Name: proportion, dtype: float64
+y_test class distribution:
+product_success_tier
+Very_High_Success    0.333333
+Medium_Success       0.314815
+High_Success         0.314815
+Low_Success          0.037037
+Name: proportion, dtype: float64
+
+Sample product_features_df with target:
+   product_id  total_sales_in_first_60d product_success_tier
+0           1                     330.0    Very_High_Success
+1           2                     144.0         High_Success
+2           3                     142.0         High_Success
+3           4                     278.0    Very_High_Success
+4           5                      44.0       Medium_Success
+
+--- Data Visualization ---
+
+--- Machine Learning Pipeline & Evaluation ---
+Training the HistGradientBoostingClassifier model...
+Model training complete.
+
+Test Set Accuracy: 0.3519
+
+Classification Report:
+                    precision    recall  f1-score   support
+
+     High_Success       0.27      0.24      0.25        17
+      Low_Success       0.00      0.00      0.00         2
+   Medium_Success       0.43      0.35      0.39        17
+Very_High_Success       0.39      0.50      0.44        18
+
+         accuracy                           0.35        54
+        macro avg       0.27      0.27      0.27        54
+     weighted avg       0.35      0.35      0.35        54
+
+
+--- Pipeline Execution Complete ---
