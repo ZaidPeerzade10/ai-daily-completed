@@ -1,0 +1,68 @@
+Simulating email click events chronologically to build a realistic signal...
+Finished simulating 29575 email click events.
+--- SQL Feature Engineering (Initial Join) ---
+Shape after initial SQL join: (29575, 10)
+
+--- Python-based Feature Refinement ---
+Total events: 29575
+Overall Click-Through Rate (CTR): 0.0569
+Sample of engineered features and target (first 10 rows):
+   customer_id  send_date  is_clicked  customer_prior_total_emails_sent  customer_prior_emails_clicked  customer_prior_click_rate  days_since_last_customer_email_send  days_since_signup_at_send
+0            1 2025-12-16           0                               0.0                            0.0                   0.000000                                114.0                        114
+1            1 2026-01-09           0                               1.0                            0.0                   0.000000                                 24.0                        138
+2            1 2026-03-27           1                               2.0                            0.0                   0.000000                                 77.0                        215
+3            1 2026-04-04           0                               3.0                            1.0                   0.333333                                  8.0                        223
+4            1 2026-05-15           0                               4.0                            1.0                   0.250000                                 41.0                        264
+5            1 2026-06-15           0                               5.0                            1.0                   0.200000                                 31.0                        295
+6            1 2026-07-23           0                               6.0                            1.0                   0.166667                                 38.0                        333
+7            1 2026-08-16           0                               7.0                            1.0                   0.142857                                 24.0                        357
+8            2 2025-11-10           1                               0.0                            1.0                   0.000000                                754.0                        754
+9            2 2026-08-21           0                               1.0                            1.0                   1.000000                                284.0                       1038
+
+--- Feature Selection and Data Splitting ---
+Train data size: 20702 (CTR: 0.0601)
+Validation data size: 4436 (CTR: 0.0523)
+Test data size: 4437 (CTR: 0.0469)
+Train send date range: 2025-04-30 to 2026-04-24
+Validation send date range: 2026-04-24 to 2026-06-28
+Test send date range: 2026-06-28 to 2026-11-04
+
+--- Machine Learning Pipeline Construction and Training ---
+Calculated scale_pos_weight: 15.64
+Training the model...
+Model training complete.
+
+--- Model Evaluation ---
+
+Validation Set Evaluation:
+  AUC-ROC: 0.5723
+  Precision (Class 1 - Clicks): 0.0965
+  Recall (Class 1 - Clicks): 0.1293
+  F1-Score (Class 1 - Clicks): 0.1105
+  Log Loss: 0.3796
+  Confusion Matrix:
+[[3923  281]
+ [ 202   30]]
+
+Test Set Evaluation:
+  AUC-ROC: 0.5818
+  Precision (Class 1 - Clicks): 0.0505
+  Recall (Class 1 - Clicks): 0.0529
+  F1-Score (Class 1 - Clicks): 0.0516
+  Log Loss: 0.3301
+  Confusion Matrix:
+[[4022  207]
+ [ 197   11]]
+
+--- Model Persistence and Deployment Considerations ---
+Trained model pipeline saved to email_ctr_prediction_pipeline.joblib
+
+Deployment Considerations:
+1.  **Feature Engineering at Scale:** For real-time prediction requests, the sequential features (`customer_prior_total_emails_sent`, `customer_prior_emails_clicked`, `days_since_last_customer_email_send`) need to be calculated efficiently in a production environment. This often involves a real-time feature store or streaming data pipelines that keep customer interaction histories updated for quick lookups.
+2.  **Latency Requirements:** Predictions for new emails might be required in milliseconds. The preprocessing steps and the model itself must be optimized for low latency inference. Batch predictions can be used for scheduled email campaigns, while real-time predictions are needed for trigger-based or personalized emails.
+3.  **Data Ingestion and Freshness:** New customer profiles, campaign details, and most importantly, new email interaction logs (including `is_clicked` outcomes) must continuously update the underlying data sources. Stale features will lead to degraded model performance.
+4.  **Monitoring:** Implement robust monitoring for model performance (e.g., AUC-ROC, Precision, Recall, actual CTR lift compared to predictions) and data drift (changes in feature distributions, target distribution). Alerting mechanisms should be in place for significant drops in performance or shifts in data.
+5.  **Retraining Schedules:** Establish a clear retraining strategy (e.g., daily, weekly, monthly, or event-driven based on drift detection) to adapt the model to new trends, customer behaviors, and campaign types. This often involves an automated MLOps pipeline.
+6.  **A/B Testing Integration:** To rigorously validate the model's impact, integrate it into an A/B testing framework. Compare model-driven targeting against existing rules-based approaches or random targeting to quantify the business value (e.g., increased CTR, conversion rates).
+7.  **Explainability:** For models used in marketing, understanding feature importance and individual prediction explanations (e.g., using SHAP or LIME) can provide valuable insights to marketing teams, helping them refine campaign strategies and content.
+8.  **Infrastructure:** Deploy the model as a scalable microservice (e.g., using a web framework like Flask/FastAPI, containerized with Docker, orchestrated with Kubernetes) to serve predictions via an API, capable of handling the expected request volume.
