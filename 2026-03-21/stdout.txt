@@ -1,0 +1,39 @@
+Total loans evaluated: 650
+Number of bad loans (target=1): 473
+Proportion of bad loans: 0.73
+
+--- Model Evaluation ---
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.97      1.00      0.99        35
+           1       1.00      0.99      0.99        95
+
+    accuracy                           0.99       130
+   macro avg       0.99      0.99      0.99       130
+weighted avg       0.99      0.99      0.99       130
+
+
+ROC AUC Score: 0.9901
+
+Confusion Matrix:
+[[35  0]
+ [ 1 94]]
+  True Negatives (TN): 35
+  False Positives (FP): 0
+  False Negatives (FN): 1
+  True Positives (TP): 94
+
+--- Feature Importances (Top 10) ---
+                     feature  importance
+     days_to_first_repayment    0.460947
+total_early_underpaid_amount    0.069282
+     avg_early_payment_ratio    0.068568
+               interest_rate    0.056339
+      has_early_underpayment    0.050966
+                 loan_amount    0.034819
+                credit_score    0.032466
+     num_early_late_payments    0.029913
+      has_early_late_payment    0.029141
+                      income    0.027960
