@@ -1,0 +1,64 @@
+Generated 602 customers.
+Generated 11050 interactions.
+Generated 1567 feedback entries.
+
+SQL Feature Engineering results (first 5 rows):
+   customer_id  ... days_since_first_interaction_first_30d
+0            1  ...                                    NaN
+1            2  ...                                    8.0
+2            3  ...                                    NaN
+3            4  ...                                    NaN
+4            5  ...                                    NaN
+
+[5 rows x 10 columns]
+Shape of initial features DataFrame: (602, 10)
+
+DataFrame after Pandas Feature Engineering and Target Creation (first 5 rows):
+   customer_id  ... is_negative_future_sentiment
+0            1  ...                            0
+1            2  ...                            1
+2            3  ...                            1
+3            4  ...                            0
+4            5  ...                            0
+
+[5 rows x 12 columns]
+Shape of final features DataFrame: (602, 12)
+Target distribution:
+is_negative_future_sentiment
+0    0.880399
+1    0.119601
+Name: proportion, dtype: float64
+
+Train set size: 421 samples
+Test set size: 181 samples
+Train target distribution:
+is_negative_future_sentiment
+0    0.881235
+1    0.118765
+Name: proportion, dtype: float64
+Test target distribution:
+is_negative_future_sentiment
+0    0.878453
+1    0.121547
+Name: proportion, dtype: float64
+
+Generating visualizations...
+Visualizations saved as 'avg_duration_vs_sentiment.png' and 'tier_vs_sentiment_stacked_bar.png'.
+
+Building and training ML pipeline...
+
+--- Model Evaluation ---
+ROC AUC Score: 0.4870
+
+Classification Report:
+                        precision    recall  f1-score   support
+
+No Negative Sentiment       0.88      0.97      0.92       159
+   Negative Sentiment       0.00      0.00      0.00        22
+
+             accuracy                           0.86       181
+            macro avg       0.44      0.49      0.46       181
+         weighted avg       0.77      0.86      0.81       181
+
+
+Pipeline execution complete.
