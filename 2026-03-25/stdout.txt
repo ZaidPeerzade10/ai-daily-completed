@@ -1,0 +1,29 @@
+Generated 689 users, 170 merchants, 12273 transactions.
+Overall fraud rate: 25.22%
+Engineered 12273 transactions with SQL features.
+Columns after SQL feature engineering: ['transaction_id', 'user_id', 'merchant_id', 'transaction_date', 'amount', 'transaction_type', 'is_fraud', 'user_tier', 'region', 'category', 'risk_score', 'is_international', 'signup_date', 'user_prior_num_transactions', 'user_prior_total_spend', 'user_avg_prior_transaction_amount', 'user_prior_num_fraud_transactions', 'days_since_last_user_transaction', 'merchant_prior_num_transactions', 'merchant_avg_prior_transaction_amount', 'merchant_prior_num_fraud_transactions']
+
+Final feature set includes 14 numerical and 5 categorical features.
+X shape: (12273, 19), y shape: (12273,)
+Train set size: 8591, Test set size: 3682
+Fraud rate in train set: 25.21%, in test set: 25.23%
+
+Generating visualizations...
+
+Building and training ML pipeline...
+
+Model Evaluation on Test Set:
+ROC AUC Score: 0.7342
+
+Classification Report (default 0.5 threshold):
+              precision    recall  f1-score   support
+
+           0       0.84      0.78      0.81      2753
+           1       0.46      0.56      0.50       929
+
+    accuracy                           0.72      3682
+   macro avg       0.65      0.67      0.66      3682
+weighted avg       0.74      0.72      0.73      3682
+
+
+Script finished.
