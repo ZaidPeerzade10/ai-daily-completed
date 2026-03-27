@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/runner/work/ai-daily-runner/ai-daily-runner/workspace/2026-03-27/solution_attempt_3.py", line 170, in <module>
+    courses_df = create_courses_df(num_courses=np.random.randint(100, 201))
+  File "/home/runner/work/ai-daily-runner/ai-daily-runner/workspace/2026-03-27/solution_attempt_3.py", line 26, in create_courses_df
+    release_dates = generate_random_dates(
+  File "/home/runner/work/ai-daily-runner/ai-daily-runner/workspace/2026-03-27/solution_attempt_3.py", line 18, in generate_random_dates
+    start_ts = datetime.datetime.timestamp(start_date)
+TypeError: descriptor 'timestamp' for 'datetime.datetime' objects doesn't apply to a 'datetime.date' object
