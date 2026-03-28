@@ -1,0 +1,64 @@
+--- 1. Generating Synthetic Data ---
+Generated 351 properties and 6439 transactions.
+Sample properties_df head:
+   property_id  built_year  ...  property_type   neighborhood
+0            1        1964  ...          Condo  Suburban_West
+1            2        1942  ...          Condo          Rural
+2            3        1965  ...          Condo  Suburban_East
+3            4        1933  ...      Townhouse  Suburban_East
+4            5        1941  ...          House       Downtown
+
+[5 rows x 7 columns]
+
+Sample transactions_df head:
+   transaction_id  property_id  sale_date     sale_price
+0               1            1 2010-04-12  411461.991383
+1               2            1 2012-02-11  349359.121014
+2               3            1 2015-05-29  457583.479168
+3               4            1 2019-08-25  530161.872403
+4               5            1 2022-05-24  472693.936092
+
+--- 2. Loading into SQLite & SQL Feature Engineering ---
+Generated 6088 feature rows from SQL.
+Sample property_features_df head after SQL engineering:
+   transaction_id  ...  neighborhood_num_sales_prior_to_sale
+0               1  ...                                    87
+1               2  ...                                   145
+2               3  ...                                   241
+3               4  ...                                   388
+4               5  ...                                   498
+
+[5 rows x 16 columns]
+
+--- 3. Pandas Feature Engineering & Regression Target Creation ---
+Dataset split: 4261 training samples, 1827 testing samples.
+
+Sample X_train head:
+        sale_price  built_year  ...  property_type   neighborhood
+2691  9.616332e+05        1980  ...          Condo  Suburban_East
+1773  1.000205e+06        1943  ...          House  Suburban_West
+602   1.015665e+06        1915  ...          House       Downtown
+3166  1.123346e+06        1901  ...      Townhouse       Downtown
+5935  5.868437e+05        1945  ...          Condo          Rural
+
+[5 rows x 15 columns]
+
+Sample y_train head:
+2691    9.541881e+05
+1773    9.596163e+05
+602     1.113854e+06
+3166    1.252310e+06
+5935    6.244134e+05
+Name: next_sale_price, dtype: float64
+
+--- 4. Data Visualization ---
+
+--- 5. ML Pipeline & Evaluation (Regression) ---
+Training the model pipeline...
+Model training complete.
+
+Model Evaluation on Test Set:
+Mean Absolute Error (MAE): $38,581.29
+R-squared (R2 Score): 0.9795
+
+--- Script Finished ---
