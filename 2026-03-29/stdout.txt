@@ -1,0 +1,89 @@
+1. Generating Synthetic Dataset...
+Synthetic Dataset Head:
+   impression_id  user_id  ad_id  ... advertiser_id  ad_placement_type  creative_type
+0           1852        0     62  ...            23             Native            GIF
+1          10927        0     88  ...            13             Native           Text
+2           4484        0      0  ...            19             Native            GIF
+3          13437        0     32  ...            29             Native            GIF
+4          12872        0     73  ...            15             Pop-up           Text
+
+[5 rows x 12 columns]
+
+Dataset Shape: (15000, 12)
+Total clicks: 683 (4.55% CTR)
+
+2. Performing SQL-based Feature Engineering...
+Features after SQL engineering (head):
+   impression_id  user_id  ...  user_clicks_count_prev user_ctr_prev
+0           1852        0  ...                       0           0.0
+1          10927        0  ...                       0           0.0
+2           4484        0  ...                       0           0.0
+3          13437        0  ...                       0           0.0
+4          12872        0  ...                       0           0.0
+
+[5 rows x 17 columns]
+
+Features after SQL engineering (null counts):
+impression_id                         0
+user_id                               0
+ad_id                                 0
+impression_timestamp                  0
+click_outcome                         0
+age                                   0
+gender                                0
+location_category                     0
+ad_category                           0
+advertiser_id                         0
+ad_placement_type                     0
+creative_type                         0
+time_since_last_impression_seconds    0
+time_since_last_click_seconds         0
+user_impressions_count_prev           0
+user_clicks_count_prev                0
+user_ctr_prev                         0
+dtype: int64
+
+3. Performing Feature Preprocessing and Encoding...
+Categorical features identified: ['gender', 'location_category', 'ad_category', 'ad_placement_type', 'creative_type']
+Numerical features identified: ['age', 'advertiser_id', 'time_since_last_impression_seconds', 'time_since_last_click_seconds', 'user_impressions_count_prev', 'user_clicks_count_prev', 'user_ctr_prev']
+
+4. Splitting Data (Time-Based) and Model Selection...
+Training set size: 12000 impressions
+Test set size: 3000 impressions
+Proportion of clicks in training set: 0.0458
+Proportion of clicks in test set: 0.0443
+Selected Model: GradientBoostingClassifier
+
+5. Training Model (with basic tuning)...
+Best hyperparameters found: {'learning_rate': 0.05, 'max_depth': 3, 'n_estimators': 50}
+Best ROC AUC score on training folds: 0.5597
+
+6. Evaluating Model Performance...
+Test Set ROC AUC: 0.5405
+Test Set Log Loss: 0.1852
+
+Classification Report (Test Set):
+              precision    recall  f1-score   support
+
+           0       0.96      1.00      0.98      2867
+           1       0.33      0.02      0.03       133
+
+    accuracy                           0.95      3000
+   macro avg       0.64      0.51      0.50      3000
+weighted avg       0.93      0.95      0.93      3000
+
+
+Feature Importance (Top 10):
+                               feature  importance
+2   time_since_last_impression_seconds    0.255453
+0                                  age    0.161037
+4          user_impressions_count_prev    0.102644
+15             ad_category_Electronics    0.078891
+3        time_since_last_click_seconds    0.077530
+5               user_clicks_count_prev    0.072044
+6                        user_ctr_prev    0.071985
+1                        advertiser_id    0.056126
+16                 ad_category_Fashion    0.050040
+21            ad_placement_type_Banner    0.032992
+
+--- Script Finished ---
