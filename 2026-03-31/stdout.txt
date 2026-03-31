@@ -1,0 +1,118 @@
+Generated 602 users and 25000 events.
+Users DataFrame head:
+   user_id                signup_date country subscription_plan
+0        1 2022-04-02 06:06:21.337104      DE              Free
+1        2 2023-11-22 06:06:21.337104      DE              Free
+2        3 2022-09-14 06:06:21.337104      US   Premium_Monthly
+3        4 2023-02-25 06:06:21.337104      UK              Free
+4        5 2023-04-01 06:06:21.337104      UK              Free
+
+Events DataFrame head:
+   event_id  user_id  ...       event_type duration_seconds
+0        16        1  ...  settings_change                1
+1        27        1  ...   profile_update                1
+2        43        1  ...         app_open              465
+3        20        1  ...         app_open              207
+4        48        1  ...        post_view                7
+
+[5 rows x 5 columns]
+
+Events DataFrame dtypes:
+event_id                     int64
+user_id                      int64
+event_timestamp     datetime64[ns]
+event_type                  object
+duration_seconds             int64
+dtype: object
+
+Users DataFrame dtypes:
+user_id                       int64
+signup_date          datetime64[ns]
+country                      object
+subscription_plan            object
+dtype: object
+
+User Early Features DataFrame head (from SQL):
+   user_id  ... has_profile_update_first_14d
+0        1  ...                            0
+1        2  ...                            0
+2        3  ...                            0
+3        4  ...                            0
+4        5  ...                            0
+
+[5 rows x 11 columns]
+
+User Early Features DataFrame dtypes:
+user_id                               int64
+signup_date                          object
+country                              object
+subscription_plan                    object
+num_events_first_14d                  int64
+total_app_open_duration_first_14d     int64
+num_likes_first_14d                   int64
+num_comments_first_14d                int64
+num_shares_first_14d                  int64
+days_with_activity_first_14d          int64
+has_profile_update_first_14d          int64
+dtype: object
+
+Percentiles for total_events_after_14d (non-zero): 25th=32.00, 50th=48.00, 75th=68.00
+
+DataFrame with Features and Target head:
+   user_id         signup_date  ... total_events_after_14d future_engagement_tier
+0        1 2022-04-02 06:06:21  ...                     49        High_Engagement
+1        2 2023-11-22 06:06:21  ...                     41      Medium_Engagement
+2        3 2022-09-14 06:06:21  ...                     54        High_Engagement
+3        4 2023-02-25 06:06:21  ...                     70   Very_High_Engagement
+4        5 2023-04-01 06:06:21  ...                     51        High_Engagement
+
+[5 rows x 16 columns]
+
+Target distribution:
+future_engagement_tier
+Inactive                133
+Medium_Engagement       124
+Low_Engagement          118
+High_Engagement         114
+Very_High_Engagement    113
+Name: count, dtype: int64
+
+Train set size: 421 users
+Test set size: 181 users
+
+X_train head:
+     num_events_first_14d  ...  has_profile_update_first_14d
+487                     0  ...                             0
+307                     0  ...                             0
+255                     0  ...                             0
+178                     0  ...                             0
+0                       0  ...                             0
+
+[5 rows x 12 columns]
+
+y_train value counts:
+future_engagement_tier
+Inactive                93
+Medium_Engagement       87
+Low_Engagement          82
+High_Engagement         80
+Very_High_Engagement    79
+Name: count, dtype: int64
+
+Model Accuracy on Test Set: 0.3094
+
+Classification Report on Test Set:
+                      precision    recall  f1-score   support
+
+     High_Engagement       0.13      0.09      0.11        34
+            Inactive       0.31      0.35      0.33        40
+      Low_Engagement       0.28      0.58      0.38        36
+   Medium_Engagement       0.00      0.00      0.00        37
+Very_High_Engagement       0.56      0.53      0.55        34
+
+            accuracy                           0.31       181
+           macro avg       0.26      0.31      0.27       181
+        weighted avg       0.26      0.31      0.27       181
+
+
+Script completed successfully!
