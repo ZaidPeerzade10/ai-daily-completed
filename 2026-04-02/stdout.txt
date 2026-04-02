@@ -1,0 +1,32 @@
+Starting content interaction prediction pipeline...
+1. Generating synthetic datasets...
+Generated 605 users, 105 content items, 12291 interactions.
+2. Loading data into SQLite and performing SQL feature engineering...
+SQL feature engineering complete. Resulting DataFrame has 11893 rows.
+3. Performing Pandas feature engineering and splitting data...
+Data split: 8325 training samples, 3568 testing samples.
+4. Generating data visualizations...
+Visualizations complete.
+5. Building, training, and evaluating the Machine Learning Pipeline...
+Training the model...
+Model training complete.
+Making predictions on the test set...
+Predictions complete.
+
+--- Model Evaluation ---
+Accuracy Score: 0.6956
+
+Classification Report:
+               precision    recall  f1-score   support
+
+     Article       0.72      0.72      0.72       996
+       Ebook       0.67      0.66      0.66       532
+       Forum       0.68      0.66      0.67       431
+        Quiz       0.69      0.68      0.69       610
+       Video       0.70      0.71      0.71       999
+
+    accuracy                           0.70      3568
+   macro avg       0.69      0.69      0.69      3568
+weighted avg       0.70      0.70      0.70      3568
+
+Pipeline execution finished successfully.
