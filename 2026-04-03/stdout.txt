@@ -1,0 +1,44 @@
+--- Generating Synthetic Data ---
+Generated users_df with 650 rows.
+Generated products_df with 112 rows.
+Generated transactions_df with 13341 rows.
+
+--- Loading Data to SQLite and SQL Feature Engineering ---
+Generated user_early_features_df with 650 rows and early behavior features.
+
+First 5 rows of user_early_features_df:
+   user_id  ... days_with_transactions_first_30d
+0        1  ...                                1
+1        2  ...                                1
+2        3  ...                                1
+3        4  ...                                1
+4        5  ...                                1
+
+[5 rows x 11 columns]
+
+--- Pandas Feature Engineering & CLV Target Creation ---
+CLV target 'clv_6_months' created. Average CLV: 3232.96
+
+First 5 rows of user_early_features_df with CLV:
+   user_id signup_date  ... spend_frequency_first_30d clv_6_months
+0        1  2023-08-14  ...                  0.033333  7466.155169
+1        2  2025-04-28  ...                  0.033333  2533.354692
+2        3  2024-11-07  ...                  0.033333  2526.401058
+3        4  2023-08-05  ...                  0.033333  2403.306039
+4        5  2026-03-07  ...                  0.033333  2881.148155
+
+[5 rows x 13 columns]
+
+Data split into training (455 samples) and testing (195 samples) sets.
+
+--- Generating Data Visualizations ---
+
+--- Building and Evaluating ML Pipeline ---
+Training the ML pipeline...
+Pipeline training complete.
+
+Model Evaluation on Test Set:
+Mean Absolute Error (MAE): 1944.09
+R-squared (R2 Score): -0.17
+
+--- Script Finished ---
