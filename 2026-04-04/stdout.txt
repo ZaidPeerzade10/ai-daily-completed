@@ -1,0 +1,40 @@
+--- 1. Generating Synthetic Data ---
+Generated 648 subscribers with 0.55 renewal rate.
+Generated 15223 usage events.
+
+--- 2. Loading into SQLite & SQL Feature Engineering ---
+SQL Feature Engineering complete. Resulting DataFrame head:
+   subscriber_id  ... days_with_activity_first_30d
+0              1  ...                           14
+1              2  ...                           17
+2              3  ...                            8
+3              4  ...                           19
+4              5  ...                           17
+
+[5 rows x 10 columns]
+Shape of subscriber_early_features_df: (648, 10)
+
+--- 3. Pandas Feature Engineering ---
+Data split into training (453 samples) and testing (195 samples).
+Original renewal rate: 0.55, Train renewal rate: 0.55, Test renewal rate: 0.55
+
+--- 4. Data Visualization ---
+Visualizations displayed.
+
+--- 5. ML Pipeline & Evaluation ---
+Training the ML pipeline...
+Training complete.
+
+Test Set ROC AUC Score: 0.9715
+
+Classification Report (Test Set):
+              precision    recall  f1-score   support
+
+           0       0.95      0.80      0.87        87
+           1       0.86      0.96      0.91       108
+
+    accuracy                           0.89       195
+   macro avg       0.90      0.88      0.89       195
+weighted avg       0.90      0.89      0.89       195
+
+ML Pipeline and Evaluation complete.
