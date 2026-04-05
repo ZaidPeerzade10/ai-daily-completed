@@ -1,0 +1,171 @@
+--- Synthetic Data Generated ---
+Users DF Head:
+      user_id signup_date country   user_type
+0  user_0000  2023-09-08     FRA  enterprise
+1  user_0001  2023-09-21     CAN  enterprise
+2  user_0002  2023-08-29     CAN     premium
+3  user_0003  2023-08-15     GBR        free
+4  user_0004  2023-09-12     USA     premium
+
+App Events DF Head:
+      user_id     event_timestamp      event_type  duration_seconds
+0  user_0000 2023-09-09 08:04:44           login               599
+1  user_0000 2023-09-13 04:09:15   feature_X_use               293
+2  user_0000 2023-09-17 18:34:57   feature_Y_use               279
+3  user_0000 2023-09-18 19:12:46  view_dashboard               151
+4  user_0000 2023-09-22 00:57:33     error_event                 0
+
+Support Tickets DF Head:
+      user_id    ticket_timestamp
+0  user_0001 2023-10-28 02:44:43
+1  user_0006 2023-10-27 00:07:08
+2  user_0008 2023-10-18 08:32:41
+3  user_0020 2023-09-28 04:41:50
+4  user_0020 2023-10-05 20:27:17
+
+Total users: 1000
+Total app events: 61655
+Total support tickets: 327
+
+--- Feature Engineering for Analysis Window: 2023-09-01 00:00:00 to 2023-10-01 00:00:00 (exclusive) ---
+
+User Event Features DF Head:
+      user_id  ...  avg_event_duration_last_30d
+0  user_0000  ...                   321.857143
+1  user_0001  ...                   277.750000
+2  user_0002  ...                   342.833333
+3  user_0003  ...                   318.125000
+4  user_0004  ...                   186.500000
+
+[5 rows x 10 columns]
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 1000 entries, 0 to 999
+Data columns (total 10 columns):
+ #   Column                         Non-Null Count  Dtype  
+---  ------                         --------------  -----  
+ 0   user_id                        1000 non-null   object 
+ 1   login_count_last_30d           1000 non-null   int64  
+ 2   view_dashboard_count_last_30d  1000 non-null   int64  
+ 3   feature_X_use_count_last_30d   1000 non-null   int64  
+ 4   feature_Y_use_count_last_30d   1000 non-null   int64  
+ 5   error_event_count_last_30d     1000 non-null   int64  
+ 6   days_with_activity_last_30d    1000 non-null   int64  
+ 7   has_error_event_last_30d       1000 non-null   int64  
+ 8   has_login_last_30d             1000 non-null   int64  
+ 9   avg_event_duration_last_30d    1000 non-null   float64
+dtypes: float64(1), int64(8), object(1)
+memory usage: 78.2+ KB
+
+User Event Features DF Info:
+ None
+
+--- Creating Target Variable for Forecast Window: 2023-10-01 00:00:00 to 2023-10-31 00:00:00 (exclusive) ---
+
+Final Feature DF Head with Target:
+      user_id signup_date  ... user_tenure_days has_support_ticket_next_30d
+0  user_0000  2023-09-08  ...               23                           0
+1  user_0001  2023-09-21  ...               10                           1
+2  user_0002  2023-08-29  ...               33                           0
+3  user_0003  2023-08-15  ...               47                           0
+4  user_0004  2023-09-12  ...               19                           0
+
+[5 rows x 15 columns]
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 1000 entries, 0 to 999
+Data columns (total 15 columns):
+ #   Column                         Non-Null Count  Dtype         
+---  ------                         --------------  -----         
+ 0   user_id                        1000 non-null   object        
+ 1   signup_date                    1000 non-null   datetime64[ns]
+ 2   country                        1000 non-null   object        
+ 3   user_type                      1000 non-null   object        
+ 4   login_count_last_30d           1000 non-null   int64         
+ 5   view_dashboard_count_last_30d  1000 non-null   int64         
+ 6   feature_X_use_count_last_30d   1000 non-null   int64         
+ 7   feature_Y_use_count_last_30d   1000 non-null   int64         
+ 8   error_event_count_last_30d     1000 non-null   int64         
+ 9   days_with_activity_last_30d    1000 non-null   int64         
+ 10  has_error_event_last_30d       1000 non-null   int64         
+ 11  has_login_last_30d             1000 non-null   int64         
+ 12  avg_event_duration_last_30d    1000 non-null   float64       
+ 13  user_tenure_days               1000 non-null   int64         
+ 14  has_support_ticket_next_30d    1000 non-null   int64         
+dtypes: datetime64[ns](1), float64(1), int64(10), object(3)
+memory usage: 117.3+ KB
+
+Final Feature DF Info:
+ None
+
+--- Exploratory Data Analysis (EDA) ---
+
+Target variable (has_support_ticket_next_30d) distribution:
+ has_support_ticket_next_30d
+0    0.841
+1    0.159
+Name: proportion, dtype: float64
+
+Note: Significant class imbalance detected. `class_weight='balanced'` is used in the model.
+
+Numerical Features: ['login_count_last_30d', 'view_dashboard_count_last_30d', 'feature_X_use_count_last_30d', 'feature_Y_use_count_last_30d', 'error_event_count_last_30d', 'days_with_activity_last_30d', 'has_error_event_last_30d', 'has_login_last_30d', 'avg_event_duration_last_30d', 'user_tenure_days']
+Categorical Features: ['country', 'user_type']
+
+Train set shape: (800, 12), Target shape: (800,)
+Test set shape: (200, 12), Target shape: (200,)
+
+--- Model Training ---
+
+Training RandomForestClassifier pipeline...
+Training complete.
+
+--- Model Evaluation ---
+
+Classification Report:
+
+              precision    recall  f1-score   support
+
+   No Ticket       0.86      0.97      0.91       168
+  Has Ticket       0.55      0.19      0.28        32
+
+    accuracy                           0.84       200
+   macro avg       0.70      0.58      0.60       200
+weighted avg       0.81      0.84      0.81       200
+
+
+ROC-AUC Score: 0.7895
+
+--- Feature Importances ---
+Top 20 Features by Importance:
+ error_event_count_last_30d       0.298646
+days_with_activity_last_30d      0.116064
+avg_event_duration_last_30d      0.115030
+user_tenure_days                 0.103911
+view_dashboard_count_last_30d    0.057601
+feature_Y_use_count_last_30d     0.055749
+feature_X_use_count_last_30d     0.055646
+login_count_last_30d             0.052528
+has_error_event_last_30d         0.022647
+country_FRA                      0.017994
+user_type_free                   0.017456
+user_type_premium                0.015895
+user_type_enterprise             0.013739
+country_CAN                      0.013122
+country_GBR                      0.012804
+country_USA                      0.012311
+country_DEU                      0.011209
+has_login_last_30d               0.007647
+dtype: float64
+
+--- Sample Predictions (Test Set) ---
+     Actual Ticket  Predicted Ticket  Probability (Has Ticket)
+421              1                 0                      0.09
+870              0                 0                      0.02
+779              0                 0                      0.03
+770              0                 0                      0.05
+256              0                 0                      0.09
+5                0                 0                      0.06
+523              0                 0                      0.04
+629              0                 0                      0.02
+353              0                 0                      0.12
+882              0                 0                      0.06
+
+--- Pipeline Execution Complete ---
