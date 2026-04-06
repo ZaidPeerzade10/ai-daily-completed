@@ -1,0 +1,39 @@
+--- Starting Product Return Prediction Pipeline ---
+Generating 602 synthetic customers...
+Generating 134 synthetic products...
+Generating 10610 synthetic transactions...
+Synthetic data generated. Overall return rate: 20.39%
+Warning: Overall return rate is outside the 10-15% target range. Adjusting base probability for better fit.
+Adjusted return rate: 12.54%
+
+--- Data Generation Complete ---
+Loading data into in-memory SQLite database and performing SQL feature engineering...
+SQL feature engineering complete. Data loaded into pandas DataFrame.
+Performing Pandas feature engineering and preparing data for ML...
+Data split into training (7427 samples) and testing (3183 samples) sets.
+Training set return rate: 12.55%
+Testing set return rate: 12.54%
+
+--- Generating Data Visualizations ---
+Violin plot generated (saved to buffer).
+Stacked bar chart generated (saved to buffer).
+Visualization buffers are available (not printed to stdout directly for script execution).
+
+--- Building and Training ML Pipeline ---
+ML Pipeline training complete.
+
+--- Model Evaluation ---
+ROC AUC Score on Test Set: 0.5547
+
+Classification Report on Test Set:
+                  precision    recall  f1-score   support
+
+Not Returned (0)       0.87      1.00      0.93      2784
+    Returned (1)       0.20      0.00      0.00       399
+
+        accuracy                           0.87      3183
+       macro avg       0.54      0.50      0.47      3183
+    weighted avg       0.79      0.87      0.82      3183
+
+
+--- Pipeline Execution Complete ---
