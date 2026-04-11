@@ -1,0 +1,20 @@
+Total users: 602
+Upgrade rate: 8.64%
+Train set size: 421 (Upgrade rate: 8.55%)
+Test set size: 181 (Upgrade rate: 8.84%)
+
+Training the ML model...
+Model training complete.
+
+ROC AUC Score on Test Set: 1.0000
+
+Classification Report on Test Set:
+              precision    recall  f1-score   support
+
+  No Upgrade       0.99      1.00      1.00       165
+     Upgrade       1.00      0.94      0.97        16
+
+    accuracy                           0.99       181
+   macro avg       1.00      0.97      0.98       181
+weighted avg       0.99      0.99      0.99       181
+
