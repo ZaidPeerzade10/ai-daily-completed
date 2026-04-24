@@ -1,0 +1,56 @@
+Generated 602 machine records.
+Generated 17866 telemetry records.
+Generated 2322 maintenance records.
+Machines with simulated major error: 167
+
+SQL Feature Engineering Result (first 5 rows):
+   machine_id machine_type  ... num_maintenances_prev_30d num_repairs_prev_30d
+0           0        TypeC  ...                         0                    0
+1           1        TypeA  ...                         0                    0
+2           2        TypeC  ...                         0                    0
+3           3        TypeB  ...                         0                    0
+4           4        TypeB  ...                         0                    0
+
+[5 rows x 10 columns]
+Generated 602 machine feature records.
+
+Pandas Feature Engineering & Target Creation Result (first 5 rows with target):
+   machine_id  ... major_error_in_next_7_days
+0           0  ...                          0
+1           1  ...                          0
+2           2  ...                          0
+3           3  ...                          0
+4           4  ...                          0
+
+[5 rows x 13 columns]
+Target distribution: 
+major_error_in_next_7_days
+0    0.98505
+1    0.01495
+Name: proportion, dtype: float64
+
+Train set size: 421 samples
+Test set size: 181 samples
+Train target distribution: 
+major_error_in_next_7_days
+0    0.985748
+1    0.014252
+Name: proportion, dtype: float64
+Test target distribution: 
+major_error_in_next_7_days
+0    0.983425
+1    0.016575
+Name: proportion, dtype: float64
+
+ROC AUC Score on Test Set: 0.4419
+
+Classification Report on Test Set:
+              precision    recall  f1-score   support
+
+           0       0.98      0.99      0.99       178
+           1       0.00      0.00      0.00         3
+
+    accuracy                           0.97       181
+   macro avg       0.49      0.49      0.49       181
+weighted avg       0.97      0.97      0.97       181
+
