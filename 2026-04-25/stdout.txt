@@ -1,0 +1,112 @@
+--- Synthetic Data Generated ---
+Users DF Head:
+    user_id signup_date region subscription_tier device_type  age
+0        1  2021-10-23   East           Premium     Desktop   22
+1        2  2021-04-22   West              Free     Desktop   46
+2        3  2023-11-01   East             Basic      Tablet   21
+3        4  2022-11-21  North             Basic     Desktop   27
+4        5  2023-04-06  South             Basic     Desktop   34
+Content DF Head:
+    content_id     genre  avg_rating  production_year
+0           1    Horror    1.137845             2009
+1           2    Action    4.878431             2018
+2           3  Thriller    4.796449             2015
+3           4    Sci-Fi    3.051610             2018
+4           5    Comedy    1.374690             2021
+Interactions DF Head:
+    interaction_id  user_id  ...  interaction_type duration_minutes
+0            8279        1  ...              view               93
+1            2460        1  ...              like               60
+2           13472        1  ...              like               53
+3           11233        1  ...              view               78
+4           11380        1  ...              view               67
+
+[5 rows x 6 columns]
+Number of Users: 602
+Number of Content Items: 145
+Number of Interactions: 13645
+
+--- SQL Feature Engineering Results (Historical) ---
+   user_id  ... avg_content_rating_prev_60d
+0        1  ...                    0.000000
+1        2  ...                    4.748364
+2        3  ...                    3.488353
+3        4  ...                    0.000000
+4        5  ...                    2.473001
+
+[5 rows x 10 columns]
+Shape of user_history_features_df: (602, 10)
+
+--- Pandas Feature Engineering & Target Creation ---
+User History Features with Target Head:
+    user_id signup_date  ... interaction_frequency_prev_60d  next_preferred_genre
+0        1  2021-10-23  ...                       0.000000                 Drama
+1        2  2021-04-22  ...                       0.016667  No Future Preference
+2        3  2023-11-01  ...                       0.266667                Comedy
+3        4  2022-11-21  ...                       0.000000                Sci-Fi
+4        5  2023-04-06  ...                       0.066667  No Future Preference
+
+[5 rows x 12 columns]
+Target Value Counts:
+ next_preferred_genre
+No Future Preference    190
+Action                   68
+Sci-Fi                   63
+Thriller                 59
+Drama                    49
+Comedy                   46
+Fantasy                  44
+Horror                   42
+Documentary              41
+Name: count, dtype: int64
+
+Training set shape: (421, 9), Test set shape: (181, 9)
+Training target distribution:
+next_preferred_genre
+No Future Preference    0.315914
+Action                  0.114014
+Sci-Fi                  0.104513
+Thriller                0.097387
+Drama                   0.080760
+Comedy                  0.076010
+Fantasy                 0.073634
+Horror                  0.068884
+Documentary             0.068884
+Name: proportion, dtype: float64
+Test target distribution:
+next_preferred_genre
+No Future Preference    0.314917
+Action                  0.110497
+Sci-Fi                  0.104972
+Thriller                0.099448
+Drama                   0.082873
+Comedy                  0.077348
+Fantasy                 0.071823
+Horror                  0.071823
+Documentary             0.066298
+Name: proportion, dtype: float64
+
+--- Generating Visualizations ---
+
+--- Building and Evaluating ML Pipeline ---
+Model Accuracy on Test Set: 0.1768
+
+Classification Report:
+                       precision    recall  f1-score   support
+
+              Action       0.08      0.10      0.09        20
+              Comedy       0.00      0.00      0.00        14
+         Documentary       0.00      0.00      0.00        12
+               Drama       0.00      0.00      0.00        15
+             Fantasy       0.22      0.15      0.18        13
+              Horror       0.00      0.00      0.00        13
+No Future Preference       0.34      0.47      0.39        57
+              Sci-Fi       0.06      0.05      0.06        19
+            Thriller       0.00      0.00      0.00        18
+
+            accuracy                           0.18       181
+           macro avg       0.08      0.09      0.08       181
+        weighted avg       0.14      0.18      0.15       181
+
+
+--- Pipeline Execution Complete ---
