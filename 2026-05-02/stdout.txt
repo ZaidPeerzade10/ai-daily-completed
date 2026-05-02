@@ -1,0 +1,37 @@
+--- Generating Synthetic Data ---
+Generated 1138 users, 2106 assignments, 39011 events.
+Total purchases simulated: 142
+
+--- Performing SQL Feature Engineering ---
+Fetched 2106 rows from SQL query.
+Columns from SQL query:
+['assignment_id', 'user_id', 'test_name', 'variant_name', 'assignment_date', 'country', 'device_type', 'age_group', 'num_page_views_7d', 'num_clicks_7d', 'num_add_to_carts_7d', 'total_purchases_7d', 'total_revenue_7d', 'total_events_7d']
+
+--- Performing Pandas Feature Engineering ---
+Total entries in final feature set: 2106
+Conversion rate (is_purchased_7d): 6.65%
+Training set size: 1474 samples
+Test set size: 632 samples
+
+--- Generating Data Visualizations ---
+Saved violin plot to 'total_revenue_by_purchase_status_violin.png'
+Saved stacked bar chart for 'HomepageRedesign' to 'conversion_rate_by_variant_stacked_bar.png'
+
+--- Building and Evaluating ML Pipeline ---
+ML pipeline trained successfully.
+
+--- Model Evaluation Results ---
+ROC AUC Score: 1.0000
+
+Classification Report:
+               precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00       590
+           1       1.00      1.00      1.00        42
+
+    accuracy                           1.00       632
+   macro avg       1.00      1.00      1.00       632
+weighted avg       1.00      1.00      1.00       632
+
+
+--- Script Finished ---
