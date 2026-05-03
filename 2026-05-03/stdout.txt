@@ -1,0 +1,69 @@
+Total users: 1000
+Users churning specifically in prediction window: 131
+Proportion of users churning in prediction window: 13.10%
+
+Generated 1000 users.
+Generated 1800507 activity records.
+
+Users head:
+   user_id registration_date subscription_type churn_date
+0        1        2022-04-13              Free        NaT
+1        2        2023-03-12              Free 2023-10-26
+2        3        2022-09-28              Free        NaT
+3        4        2022-04-17              Free 2023-10-25
+4        5        2022-03-13          Standard        NaT
+
+Activity head:
+   user_id  activity_timestamp   activity_type
+0        1 2022-04-13 07:19:07  support_ticket
+1        1 2022-04-13 13:37:36     feature_use
+2        1 2022-04-13 16:15:02     feature_use
+3        1 2022-04-14 04:57:37     feature_use
+4        1 2022-04-14 11:37:30       page_view
+
+Features DataFrame head after SQL query:
+   user_id  ... days_since_last_activity_at_cutoff
+0        1  ...                           0.055856
+1        2  ...                           0.160289
+2        3  ...                           0.165150
+3        4  ...                           0.076262
+4        5  ...                           0.120984
+
+[5 rows x 8 columns]
+Features DataFrame shape: (1000, 8)
+
+Target variable distribution:
+will_churn_in_next_30_days
+0    869
+1    131
+Name: count, dtype: int64
+Churn rate in prediction window: 13.10%
+
+X_train shape: (800, 7), X_test shape: (200, 7)
+y_train churn distribution:
+will_churn_in_next_30_days
+0    0.86875
+1    0.13125
+Name: proportion, dtype: float64
+y_test churn distribution:
+will_churn_in_next_30_days
+0    0.87
+1    0.13
+Name: proportion, dtype: float64
+
+Training the HistGradientBoostingClassifier pipeline...
+Training complete.
+
+--- Model Evaluation ---
+ROC AUC Score: 0.7451
+
+Classification Report:
+              precision    recall  f1-score   support
+
+    No Churn       0.89      0.97      0.93       174
+       Churn       0.45      0.19      0.27        26
+
+    accuracy                           0.86       200
+   macro avg       0.67      0.58      0.60       200
+weighted avg       0.83      0.86      0.84       200
+
