@@ -1,0 +1,38 @@
+Generated 1102 posts and 45287 interactions.
+
+--- Early Engagement Features (First 5 Rows) ---
+   post_id  ... unique_users_first_24h
+0        0  ...                      9
+1        1  ...                      3
+2        2  ...                     10
+3        3  ...                      7
+4        4  ...                     14
+
+[5 rows x 11 columns]
+Shape of early features DataFrame: (1102, 11)
+
+90th percentile virality threshold (total active interactions in 7 days): 35.00
+X_train shape: (771, 11), y_train shape: (771,)
+X_test shape: (331, 11), y_test shape: (331,)
+Viral posts in target (1s): 108 (9.80%)
+Viral posts in training set (1s): 76 (9.86%)
+Viral posts in test set (1s): 32 (9.67%)
+
+--- Generating Visualizations ---
+
+--- Building and Evaluating ML Pipeline ---
+
+ROC AUC Score on Test Set: 0.9621
+
+Classification Report on Test Set:
+              precision    recall  f1-score   support
+
+           0       0.98      0.99      0.99       299
+           1       0.93      0.81      0.87        32
+
+    accuracy                           0.98       331
+   macro avg       0.95      0.90      0.93       331
+weighted avg       0.98      0.98      0.98       331
+
+
+--- Script Finished ---
