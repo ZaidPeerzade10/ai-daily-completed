@@ -1,0 +1,4 @@
+/home/runner/work/ai-daily-runner/ai-daily-runner/workspace/2026-05-21/solution_attempt_3.py:313: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
+  category_returns = final_df.groupby(['product_category', 'will_be_returned_in_next_30_days']).size().unstack(fill_value=0)
+/home/runner/work/ai-daily-runner/ai-daily-runner/workspace/2026-05-21/solution_attempt_3.py:324: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
+  loyalty_returns = final_df.groupby(['loyalty_status', 'will_be_returned_in_next_30_days']).size().unstack(fill_value=0)
