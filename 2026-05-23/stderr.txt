@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/runner/work/ai-daily-runner/ai-daily-runner/workspace/2026-05-23/solution_attempt_3.py", line 21, in <module>
+    warnings.filterwarnings('ignore', category=pd.io.sql.PerformanceWarning) # For to_sql large data
+AttributeError: module 'pandas.io.sql' has no attribute 'PerformanceWarning'
