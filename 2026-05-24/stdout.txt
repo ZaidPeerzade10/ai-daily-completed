@@ -1,0 +1,37 @@
+--- Generating Synthetic Data ---
+Generated 1223 customers, 222 churned.
+Generated 189 content items.
+Generated 28970 viewing history records.
+
+--- Loading Data into SQLite and SQL Feature Engineering ---
+Global Prediction Cutoff Date: 2026-04-23 19:00:00
+Generated 1223 customer feature records from SQL.
+
+--- Pandas Feature Engineering & Binary Target Creation ---
+Target distribution:
+will_churn_in_next_30_days
+0    1202
+1      21
+Name: count, dtype: int64
+X_train shape: (856, 10), y_train shape: (856,)
+X_test shape: (367, 10), y_test shape: (367,)
+
+--- Generating Data Visualizations ---
+
+--- Building and Evaluating ML Pipeline ---
+ML Pipeline trained successfully.
+
+ROC AUC Score on Test Set: 0.4954
+
+Classification Report on Test Set:
+              precision    recall  f1-score   support
+
+           0       0.98      0.99      0.98       361
+           1       0.00      0.00      0.00         6
+
+    accuracy                           0.97       367
+   macro avg       0.49      0.49      0.49       367
+weighted avg       0.97      0.97      0.97       367
+
+
+--- Pipeline execution complete ---
