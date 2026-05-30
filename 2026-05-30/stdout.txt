@@ -1,0 +1,34 @@
+--- Generating Synthetic Data ---
+Generated 1102 products.
+Generated 26460 sales records (target: 20k-30k).
+Latest sale_date in dataset: 2025-10-30 12:54:24.300877636
+
+--- Performing SQL-based Feature Engineering ---
+Features calculated up to cutoff date: 2025-08-30 12:54:24.300877636
+Product features DataFrame head:
+   product_id    category  ... num_sales_prev_30d  days_since_last_sale_at_cutoff
+0           1       Books  ...                  0                      808.210788
+1           2   Groceries  ...                  0                      351.749535
+2           3  Home Goods  ...                  0                      666.584321
+3           4   Groceries  ...                  0                     1033.360452
+4           5   Groceries  ...                  0                      515.351023
+
+[5 rows x 10 columns]
+
+--- Performing Pandas-based Feature Engineering & Target Creation ---
+Target distribution in full dataset:
+next_14d_demand_category
+Low       1.0
+Medium    0.0
+High      0.0
+Name: proportion, dtype: float64
+Target distribution in training set:
+next_14d_demand_category_encoded
+Low    1.0
+Name: proportion, dtype: float64
+Target distribution in test set:
+next_14d_demand_category_encoded
+Low    1.0
+Name: proportion, dtype: float64
+
+--- Generating Data Visualizations ---
