@@ -1,0 +1,60 @@
+--- 1. Generating Synthetic Data ---
+Generated 1102 loan applicants.
+Generated 33374 payment records.
+Default rate: 14.52%
+Sample of loan_applicants_df:
+   applicant_id  age  ...  application_date _actual_default_status
+0         10000   69  ...        2023-06-07                      1
+1         10001   46  ...        2023-06-08                      0
+2         10002   32  ...        2023-06-09                      1
+3         10003   60  ...        2023-06-10                      1
+4         10004   25  ...        2023-06-11                      1
+
+[5 rows x 9 columns]
+
+Sample of payment_history_df:
+   payment_id  applicant_id payment_date  amount_paid  is_late_payment
+0          12         10000   2021-08-13  1109.545911                0
+1           7         10000   2021-08-21  1530.181562                0
+2           8         10000   2021-08-28   948.867102                0
+3           3         10000   2021-09-25  1378.715516                0
+4          13         10000   2021-10-14  1912.036890                1
+
+--- 2. Loading into SQLite & SQL Feature Engineering ---
+Features DataFrame created with 1102 rows and 15 columns.
+Sample of loan_features_df (after SQL feature engineering):
+   applicant_id  ...  days_since_last_payment_at_app
+0         10000  ...                               1
+1         10001  ...                              12
+2         10002  ...                              64
+3         10003  ...                              27
+4         10004  ...                              44
+
+[5 rows x 15 columns]
+
+--- 3. Pandas Feature Engineering & Binary Target Creation ---
+X_train shape: (771, 13), y_train shape: (771,)
+X_test shape: (331, 13), y_test shape: (331,)
+Default rate in y_train: 14.53%
+Default rate in y_test: 14.50%
+
+--- 4. Data Visualization ---
+
+--- 5. ML Pipeline & Evaluation ---
+Training the model pipeline...
+Model training complete.
+
+ROC AUC Score on Test Set: 0.9854
+
+Classification Report on Test Set:
+              precision    recall  f1-score   support
+
+           0       0.97      0.98      0.97       283
+           1       0.86      0.79      0.83        48
+
+    accuracy                           0.95       331
+   macro avg       0.91      0.89      0.90       331
+weighted avg       0.95      0.95      0.95       331
+
+
+--- Pipeline execution complete ---
