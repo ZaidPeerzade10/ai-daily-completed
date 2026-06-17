@@ -1,0 +1,101 @@
+--- Initial Dataframes Head & Target Distribution ---
+Road Segments (first 3 rows):
+   segment_ID  length_km  lanes  speed_limit_kmh road_type
+0    SEG_000        4.1      4               80  Suburban
+1    SEG_001        9.5      4              120  Suburban
+2    SEG_002        7.5      3               50  Suburban
+
+Traffic Sensors (first 3 rows):
+   sensor_ID segment_ID
+0  SEN_0001    SEG_000
+1  SEN_0002    SEG_000
+2  SEN_0003    SEG_001
+
+Traffic Readings (first 3 rows):
+   sensor_ID  timestamp  ...  actual_congestion_index  traffic_congestion_level
+0  SEN_0001 2023-01-01  ...                16.082113                       Low
+1  SEN_0002 2023-01-01  ...                16.369291                       Low
+2  SEN_0003 2023-01-01  ...                10.741093                       Low
+
+[3 rows x 6 columns]
+
+Target Variable Distribution:
+ traffic_congestion_level
+Medium    2154
+Low       2091
+High      2091
+Name: count, dtype: int64
+Congestion Index Thresholds: Low <= 23.01, Medium <= 55.32
+
+--- Master DataFrame Head (after joining static & real-time features) ---
+  sensor_ID           timestamp  ...  speed_limit_kmh  road_type
+0  SEN_0001 2023-01-01 00:00:00  ...               80   Suburban
+1  SEN_0002 2023-01-01 00:00:00  ...               80   Suburban
+2  SEN_0001 2023-01-01 00:30:00  ...               80   Suburban
+3  SEN_0002 2023-01-01 00:30:00  ...               80   Suburban
+4  SEN_0001 2023-01-01 01:00:00  ...               80   Suburban
+
+[5 rows x 11 columns]
+
+--- Generating Historical Features (DF size: 6336 rows) ---
+This step iterates through each row and applies historical lookups. It may take a few seconds...
+
+--- Master DataFrame Head (after historical features) ---
+  sensor_ID  ... hist_max_observed_speed_168h
+0  SEN_0001  ...                          NaN
+1  SEN_0002  ...                          NaN
+2  SEN_0001  ...                         50.0
+3  SEN_0002  ...                         50.0
+4  SEN_0001  ...                         90.0
+
+[5 rows x 56 columns]
+
+--- Features identified for Preprocessing ---
+Numerical: ['vehicle_count', 'observed_speed_kmh', 'length_km', 'lanes', 'speed_limit_kmh', 'is_weekend', 'hist_avg_vehicle_count_1h', 'hist_med_vehicle_count_1h', 'hist_std_vehicle_count_1h', 'hist_min_vehicle_count_1h', 'hist_max_vehicle_count_1h', 'hist_avg_observed_speed_1h', 'hist_med_observed_speed_1h', 'hist_std_observed_speed_1h', 'hist_min_observed_speed_1h', 'hist_max_observed_speed_1h', 'hist_avg_vehicle_count_4h', 'hist_med_vehicle_count_4h', 'hist_std_vehicle_count_4h', 'hist_min_vehicle_count_4h', 'hist_max_vehicle_count_4h', 'hist_avg_observed_speed_4h', 'hist_med_observed_speed_4h', 'hist_std_observed_speed_4h', 'hist_min_observed_speed_4h', 'hist_max_observed_speed_4h', 'hist_avg_vehicle_count_24h', 'hist_med_vehicle_count_24h', 'hist_std_vehicle_count_24h', 'hist_min_vehicle_count_24h', 'hist_max_vehicle_count_24h', 'hist_avg_observed_speed_24h', 'hist_med_observed_speed_24h', 'hist_std_observed_speed_24h', 'hist_min_observed_speed_24h', 'hist_max_observed_speed_24h', 'hist_avg_vehicle_count_168h', 'hist_med_vehicle_count_168h', 'hist_std_vehicle_count_168h', 'hist_min_vehicle_count_168h', 'hist_max_vehicle_count_168h', 'hist_avg_observed_speed_168h', 'hist_med_observed_speed_168h', 'hist_std_observed_speed_168h', 'hist_min_observed_speed_168h', 'hist_max_observed_speed_168h']
+Categorical: ['road_type', 'hour_of_day', 'day_of_week', 'day_of_month', 'month']
+
+--- Train-Test Split (Time-Series) ---
+Training data range: 2023-01-01 00:00:00 to 2023-01-02 23:30:00
+Test data range: 2023-01-03 00:00:00 to 2023-01-04 23:30:00
+Train samples: 3168
+Test samples: 3168
+Train target distribution:
+traffic_congestion_level
+Low       0.351957
+Medium    0.340278
+High      0.307765
+Name: proportion, dtype: float64
+Test target distribution:
+traffic_congestion_level
+High      0.352273
+Medium    0.339646
+Low       0.308081
+Name: proportion, dtype: float64
+
+--- Training Model ---
+Model training complete.
+
+--- Evaluating Model on Test Set ---
+
+Classification Report:
+              precision    recall  f1-score   support
+
+        High       0.91      0.82      0.86      1116
+         Low       0.93      0.83      0.88       976
+      Medium       0.72      0.86      0.78      1076
+
+    accuracy                           0.84      3168
+   macro avg       0.85      0.84      0.84      3168
+weighted avg       0.85      0.84      0.84      3168
+
+
+Confusion Matrix:
+[[918   0 198]
+ [  2 810 164]
+ [ 89  65 922]]
+
+Overall Accuracy: 0.84
+
+--- Example Prediction for a test point ---
+Actual Congestion Level: Low
+Predicted Congestion Level: Low
