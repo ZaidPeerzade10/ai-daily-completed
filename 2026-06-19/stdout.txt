@@ -1,0 +1,169 @@
+Step 1: Synthetic Data Generation and Cutoff Definition
+Generated 50 restaurants.
+Restaurants DataFrame head:
+  restaurant_id   cuisine    location  capacity  rating
+0          R000  American  Waterfront       143     3.4
+1          R001    French    Suburban        60     3.8
+2          R002     Asian  Waterfront        34     4.8
+3          R003    French    Suburban        64     3.6
+4          R004    French  Waterfront        84     3.2
+
+Generated 36500 daily bookings records.
+Daily Bookings DataFrame head:
+  restaurant_id       date  total_guests_booked
+0          R000 2022-01-01                  117
+1          R000 2022-01-02                   86
+2          R000 2022-01-03                   87
+3          R000 2022-01-04                   67
+4          R000 2022-01-05                   75
+
+Global Prediction Cutoff Date: 2023-11-30
+
+Step 2: Base Feature and Target Engineering (Pandas/Numpy)
+Generated 350 future prediction date records.
+Future Prediction Dates DataFrame head:
+  restaurant_id       date
+0          R000 2023-12-01
+1          R001 2023-12-01
+2          R002 2023-12-01
+3          R003 2023-12-01
+4          R004 2023-12-01
+
+Full DataFrame after initial merge and date features (head):
+  restaurant_id       date  day_of_week  ... capacity  rating  total_guests_booked
+0          R000 2022-01-01            5  ...      143     3.4                  117
+1          R000 2022-01-02            6  ...      143     3.4                   86
+2          R000 2022-01-03            0  ...      143     3.4                   87
+3          R000 2022-01-04            1  ...      143     3.4                   67
+4          R000 2022-01-05            2  ...      143     3.4                   75
+
+[5 rows x 13 columns]
+Full DataFrame after initial merge and date features (tail, showing future dates):
+      restaurant_id       date  ...  rating total_guests_booked
+36495          R049 2023-12-27  ...     3.3                  20
+36496          R049 2023-12-28  ...     3.3                  19
+36497          R049 2023-12-29  ...     3.3                  24
+36498          R049 2023-12-30  ...     3.3                  37
+36499          R049 2023-12-31  ...     3.3                  30
+
+[5 rows x 13 columns]
+
+Historical Full DataFrame with target variable (head):
+  restaurant_id       date  ...  capacity  booking_demand_category
+0          R000 2022-01-01  ...       143                     High
+1          R000 2022-01-02  ...       143                   Medium
+2          R000 2022-01-03  ...       143                   Medium
+3          R000 2022-01-04  ...       143                   Medium
+4          R000 2022-01-05  ...       143                   Medium
+
+[5 rows x 5 columns]
+
+Target category distribution (Historical):
+booking_demand_category
+Medium    18977
+High      15929
+Low          44
+Name: count, dtype: int64
+
+Step 3: Advanced Feature Engineering with SQLite Aggregations
+
+Loaded historical data into in-memory SQLite database.
+
+Calculating restaurant-specific aggregated features...
+Restaurant-specific aggregated features head:
+  restaurant_id  ...  booking_trend_7_14_days
+0          R000  ...               -12.000000
+1          R001  ...               -15.857143
+2          R002  ...                -1.000000
+3          R003  ...               -11.285714
+4          R004  ...               -13.857143
+
+[5 rows x 8 columns]
+
+Calculating market-level aggregated features...
+Market-level aggregated features head:
+  restaurant_id  ...  market_overall_avg_last_7_days
+0          R000  ...                       50.154286
+1          R001  ...                       50.154286
+2          R002  ...                       50.154286
+3          R003  ...                       50.154286
+4          R004  ...                       50.154286
+
+[5 rows x 4 columns]
+
+All aggregated features DataFrame head:
+  restaurant_id  ...  market_overall_avg_last_7_days
+0          R000  ...                       50.154286
+1          R001  ...                       50.154286
+2          R002  ...                       50.154286
+3          R003  ...                       50.154286
+4          R004  ...                       50.154286
+
+[5 rows x 11 columns]
+
+Step 4: Dataset Assembly and Exploratory Data Analysis (EDA)
+
+Master DataFrame with all features and actual target (head):
+  restaurant_id       date  ...  total_guests_booked booking_demand_category_actual
+0          R000 2022-01-01  ...                  117                           High
+1          R000 2022-01-02  ...                   86                         Medium
+2          R000 2022-01-03  ...                   87                         Medium
+3          R000 2022-01-04  ...                   67                         Medium
+4          R000 2022-01-05  ...                   75                         Medium
+
+[5 rows x 24 columns]
+
+Master DataFrame with all features and actual target (tail, showing future dates):
+      restaurant_id  ... booking_demand_category_actual
+36495          R049  ...                         Medium
+36496          R049  ...                         Medium
+36497          R049  ...                         Medium
+36498          R049  ...                           High
+36499          R049  ...                         Medium
+
+[5 rows x 24 columns]
+
+Master DataFrame shape: (36500, 24)
+Missing values in Master DataFrame after aggregation merge and initial fill:
+Series([], dtype: int64)
+
+Performing EDA visualizations...
+
+Step 5: Data Preprocessing and Model Training (Scikit-learn)
+
+Training set shape: (34950, 20)
+Prediction set shape: (1550, 20)
+Number of NaN targets in training set (should be 0): 0
+
+Preprocessing and Model Pipeline defined.
+Numerical features: ['is_weekend', 'capacity', 'rating', 'avg_guests_last_7_days', 'avg_guests_last_14_days', 'avg_guests_last_30_days', 'avg_weekend_guests_last_30_days', 'avg_weekday_guests_last_30_days', 'prop_high_demand_last_30_days', 'booking_trend_7_14_days', 'market_avg_cuisine_last_7_days', 'market_avg_location_last_7_days', 'market_overall_avg_last_7_days']
+Categorical features: ['cuisine', 'location', 'day_name']
+
+Training model with 3-fold cross-validation...
+Cross-validation F1-weighted scores: [0.64410914 0.52117964 0.56079839]
+Mean CV F1-weighted score: 0.5754
+Standard deviation of CV F1-weighted score: 0.0512
+
+Model training complete on full training data.
+
+Step 6: Prediction and Evaluation (Scikit-learn/Matplotlib/Seaborn)
+
+Generated 1550 predictions for the next 7 days.
+
+--- Model Evaluation for Future Prediction Window ---
+Classification Report:
+              precision    recall  f1-score   support
+
+        High       0.63      0.51      0.57       748
+         Low       0.00      0.00      0.00         2
+      Medium       0.61      0.72      0.66       800
+
+    accuracy                           0.62      1550
+   macro avg       0.41      0.41      0.41      1550
+weighted avg       0.62      0.62      0.62      1550
+
+Overall Accuracy on future predictions: 0.6200
+
+Visualizing predictions for a sample restaurant in the prediction window...
+
+--- Pipeline Execution Complete ---

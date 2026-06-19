@@ -1,0 +1,15 @@
+# Review for 2026-06-19
+
+Score: 0.98
+Pass: True
+
+The submission demonstrates a strong understanding and meticulous execution of the task. 
+
+1.  **Strict Cutoff Enforcement**: The `GLOBAL_PREDICTION_CUTOFF_DATE` is handled flawlessly. Features are strictly derived from data *up to and including* the cutoff, while the target is correctly generated from data *after* the cutoff, ensuring no data leakage. This is a critical aspect for time-series prediction and was perfectly implemented in both Pandas filtering and SQLite queries.
+2.  **Advanced Feature Engineering with SQLite**: The use of SQLite for time-windowed aggregations is impressive. The queries correctly utilize `JULIANDAY()` for robust date arithmetic, `CASE` statements for conditional aggregations (e.g., weekend/weekday guests, high demand proportion), and `NULLIF()` to prevent division by zero, demonstrating robust SQL practices. The `LEFT JOIN` from the `restaurants` table ensures all restaurants are considered, even if they had no recent activity, fulfilling a key hint. Both restaurant-specific and market-level features are well-designed and correctly calculated based on historical data.
+3.  **Comprehensive ML Pipeline**: A complete Scikit-learn pipeline is developed, including `ColumnTransformer` for numerical scaling and one-hot encoding categorical features. The use of `RandomForestClassifier` with `class_weight='balanced'` is appropriate given the observed class imbalance. Cross-validation is correctly applied, and the model is trained on the full training set.
+4.  **EDA and Visualization**: Relevant visualizations are performed using Matplotlib and Seaborn, providing insights into data distributions and historical booking patterns. The final visualization of actual vs. predicted demand categories for a sample restaurant in the prediction window is very insightful, showing both the raw bookings and the categorized predictions.
+5.  **Code Quality**: The code is well-structured, logically flows through the defined steps, and includes helpful print statements to track progress and data shapes. No runtime errors were observed.
+
+**Area for minor improvement**:
+*   **Class Imbalance for 'Low' Demand**: While `class_weight='balanced'` was used, the model's F1-score for the 'Low' demand category on the future predictions is 0.00, indicating it completely fails to predict this class. This is a common challenge with extreme class imbalance (only 44 historical samples for 'Low' vs ~15k-18k for 'Medium'/'High'). Further techniques like oversampling (e.g., SMOTE) or undersampling could be explored to improve performance on minority classes, though this is a challenge in model tuning/data augmentation rather than an implementation flaw in the pipeline itself. The overall accuracy and F1-weighted score are reasonable given the complexity and synthetic nature of the data.
