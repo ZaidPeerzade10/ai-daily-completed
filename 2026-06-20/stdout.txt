@@ -1,0 +1,10 @@
+1. Generating Synthetic Data...
+Generated 1102 patients, 99 doctors, 49579 appointments.
+Overall no-show rate: 29.14%
+
+2. Loading data into SQLite and performing SQL Feature Engineering...
+Global prediction cutoff date: 2026-05-29 08:06:54
+Extracted 2 future appointments for prediction.
+
+3. Performing Pandas Feature Engineering...
+Error: Not enough data or classes for train-test split. Cannot proceed with ML pipeline.
