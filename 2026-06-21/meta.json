@@ -1,0 +1,51 @@
+{
+  "date": "2026-06-21",
+  "timestamp": "2026-06-21T08:45:59.182854Z",
+  "task": {
+    "task": "Develop a machine learning pipeline to predict the **overall product rating category** ('Low', 'Medium', 'High') for a product, based on its static attributes and historical customer review patterns up to a specific cutoff date.",
+    "focus": "Time-windowed SQL feature engineering, multi-class classification, and data visualization for product sentiment prediction.",
+    "dataset": "Synthetic E-commerce Product & Review Data",
+    "hint": "1.  **Synthetic Data Generation (Pandas/Numpy)**: Create three pandas DataFrames:\n    *   `products_df`: With 500-1000 rows. Columns: `product_id` (unique integers), `product_name` (unique strings), `category` (e.g., 'Electronics', 'Books', 'Clothing', 'Home'), `price` (random floats 10.0-1000.0), `launch_date` (random dates over the last 3-5 years).\n    *   `customers_df`: With 1000-1500 rows. Columns: `customer_id` (unique integers), `signup_date`.\n    *   `reviews_df`: With 20000-30000 rows. Columns: `review_id` (unique integers), `product_id` (sampled from `products_df`), `customer_id` (sampled from `customers_df`), `review_date` (random datetimes *after* `launch_date` for respective product), `rating` (integers 1-5).\n    *   **Simulate realistic patterns**: Ensure `review_date` is always after `product_launch_date`. Simulate a distribution of ratings (e.g., more 4-5 stars than 1-2 stars, but ensure all exist). Higher priced items might have more reviews or more polarized reviews. Products launched longer ago tend to have more reviews. Sort `reviews_df` by `product_id` then `review_date`.\n\n2.  **Load into SQLite & SQL Feature Engineering (Historical Review Aggregations)**: Create an in-memory SQLite database using `sqlite3`. Load `products_df`, `customers_df`, and `reviews_df` into tables named `products`, `customers`, and `reviews` respectively.\n    *   Define `GLOBAL_PREDICTION_CUTOFF_DATE` as 45 days prior to the latest `review_date` in your generated `reviews_df`.\n    *   Write a single SQL query that performs the following for *each product* active up to `GLOBAL_PREDICTION_CUTOFF_DATE`:\n        *   `product_id`, `category`, `price`, `launch_date`.\n        *   `avg_rating_prev_90d`: Average `rating` for the product in the 90 days ending at `GLOBAL_PREDICTION_CUTOFF_DATE`. (Use `COALESCE(AVG(r.rating), 0.0)` for NULLs).\n        *   `num_reviews_prev_90d`: Count of reviews for the product in the 90 days ending at `GLOBAL_PREDICTION_CUTOFF_DATE`. (Use `COALESCE(COUNT(r.review_id), 0)`).\n        *   `days_since_last_review_at_cutoff`: Number of days between `GLOBAL_PREDICTION_CUTOFF_DATE` and the most recent `review_date` for this `product_id` *before or on* the cutoff. Return 9999 if no reviews before cutoff.\n        *   `total_reviews_since_launch`: Total count of reviews for the product from `launch_date` up to `GLOBAL_PREDICTION_CUTOFF_DATE`.\n        *   Include `GLOBAL_PREDICTION_CUTOFF_DATE` as a column for consistency.\n    *   **Ensures** all products are included (using `LEFT JOIN`), showing 0 for counts/sums and 0.0 for averages if no activity in the window. Handle `NULL`s appropriately.\n    *   The query should return all mentioned fields.\n    *   **Hint**: Use CTEs for pre-calculating product-level historical aggregates up to `GLOBAL_PREDICTION_CUTOFF_DATE`. Use `julianday()` for date comparisons.\n\n3.  **Pandas Feature Engineering & Multi-class Target Creation**: Fetch the SQL query results into a pandas DataFrame (`product_features_df`).\n    *   Convert `launch_date` and `GLOBAL_PREDICTION_CUTOFF_DATE` to datetime objects.\n    *   Handle `NaN` values: Fill numerical historical aggregated features (e.g., averages, counts) with 0.0 or 0 as appropriate. Fill `days_since_last_review_at_cutoff` with 9999.\n    *   Calculate `product_age_at_cutoff_days`: Number of days between `launch_date` and `GLOBAL_PREDICTION_CUTOFF_DATE`.\n    *   **Create the Multi-class Target `next_30d_rating_category`**: For *each product*, calculate the average `rating` of *all reviews* from the original `reviews_df` that occur *after* `GLOBAL_PREDICTION_CUTOFF_DATE` and *on or before* `GLOBAL_PREDICTION_CUTOFF_DATE + pd.Timedelta(days=30)`. Map this average rating into categories:\n        *   'Low': average_rating <= 33rd percentile of *all* such next-30-day average ratings.\n        *   'Medium': average_rating > 33rd percentile and <= 66th percentile.\n        *   'High': average_rating > 66th percentile.\n        *   If a product has no reviews in this 30-day future window, exclude it from the dataset for training/testing. Merge this target with `product_features_df`.\n    *   Define features `X` (numerical: `price`, `avg_rating_prev_90d`, `num_reviews_prev_90d`, `days_since_last_review_at_cutoff`, `total_reviews_since_launch`, `product_age_at_cutoff_days`; categorical: `category`) and target `y` (`next_30d_rating_category`).\n    *   Split into training and testing sets (e.g., 70/30 split) using `sklearn.model_selection.train_test_split` (set `random_state=42`, `stratify` on `y` for class balance).\n\n4.  **Data Visualization (Matplotlib/Seaborn)**: Create two separate plots to visually inspect relationships with `next_30d_rating_category`:\n    *   A violin plot (or box plot) showing the distribution of `price` for each `next_30d_rating_category`. Ensure appropriate labels and titles.\n    *   A stacked bar chart showing the proportion of `next_30d_rating_category` across different `category` values. Ensure appropriate labels and titles.\n\n5.  **ML Pipeline & Evaluation (Multi-class Classification)**:\n    *   Create an `sklearn.pipeline.Pipeline` with a `sklearn.compose.ColumnTransformer` for preprocessing:\n        *   For numerical features: Apply `sklearn.preprocessing.SimpleImputer(strategy='mean')` followed by `sklearn.preprocessing.StandardScaler`.\n        *   For categorical features: Apply `sklearn.preprocessing.OneHotEncoder(handle_unknown='ignore')`.\n    *   The final estimator in the pipeline should be `sklearn.ensemble.HistGradientBoostingClassifier` (set `random_state=42`).\n    *   Train the pipeline on `X_train`, `y_train`. Predict the `next_30d_rating_category` on the test set (`X_test`).\n    *   Calculate and print a `sklearn.metrics.classification_report` for the test set predictions.",
+    "date": "2026-06-21",
+    "timestamp": "2026-06-21T08:21:33.770958Z"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "code_file": "solution_attempt_1.py",
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/home/runner/work/ai-daily-runner/ai-daily-runner/workspace/2026-06-21/solution_attempt_1.py\", line 9, in <module>\n    from sklearn.preprocessing import StandardScaler, OneHotEncoder, SimpleImputer\nImportError: cannot import name 'SimpleImputer' from 'sklearn.preprocessing' (/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/sklearn/preprocessing/__init__.py)\n",
+      "review": {
+        "score": 0.3,
+        "pass": false,
+        "short_feedback": "Critical ImportError prevents execution of ML pipeline; `SimpleImputer` is incorrectly imported.",
+        "detailed_feedback": "The provided code fails to execute due to a `ModuleNotFoundError` for `SimpleImputer` from `sklearn.preprocessing`. This is a critical runtime error. In recent versions of scikit-learn (0.20+), `SimpleImputer` was moved from `sklearn.preprocessing` to `sklearn.impute`. This prevents the machine learning pipeline from being built and trained.\n\nAside from this fatal error, the rest of the implementation demonstrates a strong understanding of the requirements:\n- **Synthetic Data Generation**: Well-structured and attempts to simulate realistic patterns as requested (e.g., more reviews for older products, skewed ratings).\n- **SQL Feature Engineering**: The SQL query is sophisticated, correctly uses CTEs, handles the `GLOBAL_PREDICTION_CUTOFF_DATE`, and calculates all specified historical aggregates with appropriate `COALESCE` for NULLs and `julianday()` for date differences.\n- **Pandas Feature Engineering & Target Creation**: Correctly converts dates, calculates `product_age_at_cutoff_days`, defines the multi-class target based on future review averages and percentiles, and correctly handles product exclusion if no future reviews are available.\n- **Data Visualization**: Both requested plots (violin and stacked bar chart) are correctly implemented and well-labeled.\n\nHowever, the `ImportError` is a blocking issue that must be resolved for the pipeline to function.",
+        "needs_retry": true
+      }
+    },
+    {
+      "attempt": 2,
+      "code_file": "solution_attempt_2.py",
+      "stdout": "1. Generating Synthetic Data...\n",
+      "stderr": "Traceback (most recent call last):\n  File \"/home/runner/work/ai-daily-runner/ai-daily-runner/workspace/2026-06-21/solution_attempt_2.py\", line 56, in <module>\n    if start_date >= end_date - pd.Timedelta(days=1):\n  File \"pandas/_libs/tslibs/timestamps.pyx\", line 377, in pandas._libs.tslibs.timestamps._Timestamp.__richcmp__\nTypeError: Cannot compare Timestamp with datetime.date. Use ts == pd.Timestamp(date) or ts.date() == date instead.\n",
+      "review": {
+        "pass": false,
+        "needs_retry": true,
+        "score": 0,
+        "detailed_feedback": "Reviewer JSON parsing failed"
+      }
+    },
+    {
+      "attempt": 3,
+      "code_file": "solution_attempt_3.py",
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/home/runner/work/ai-daily-runner/ai-daily-runner/workspace/2026-06-21/solution_attempt_3.py\", line 8, in <module>\n    from sklearn.preprocessing import StandardScaler, OneHotEncoder, SimpleImputer\nImportError: cannot import name 'SimpleImputer' from 'sklearn.preprocessing' (/opt/hostedtoolcache/Python/3.10.20/x64/lib/python3.10/site-packages/sklearn/preprocessing/__init__.py)\n",
+      "review": {
+        "pass": false,
+        "needs_retry": true,
+        "score": 0,
+        "detailed_feedback": "Reviewer JSON parsing failed"
+      }
+    }
+  ]
+}
