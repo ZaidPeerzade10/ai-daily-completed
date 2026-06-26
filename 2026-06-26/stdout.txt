@@ -1,0 +1,146 @@
+--- Synthetic Data Generated ---
+Sales Leads (first 5 rows):
+   lead_id   age  company_size  ... region lead_source _actual_conversion_date
+0        1  58.0          1000  ...   East   Cold Call                     NaT
+1        2   NaN           100  ...   East    Referral                     NaT
+2        3  34.0          1000  ...   West     Webinar                     NaT
+3        4  27.0           100  ...   West   Cold Call                     NaT
+4        5  40.0           500  ...   East     Paid Ad                     NaT
+
+[5 rows x 7 columns]
+Lead Interactions (first 5 rows):
+   lead_id interaction_date interaction_type
+0     1016       2023-02-05       Email Open
+1      224       2023-07-10    Website Visit
+2      504       2023-05-18    Website Visit
+3     1761       2023-05-28   Download Guide
+4     1574       2023-10-23   Download Guide
+Prediction Cutoff Date: 2023-10-31 00:00:00
+
+--- SQL-based Time-Series Feature Engineering Complete ---
+Features after SQL aggregation (first 5 rows):
+   lead_id   age  ...  num_email_opens_prev_60d num_website_visits_prev_60d
+0        1  58.0  ...                         0                           0
+1        2   NaN  ...                         0                           0
+2        3  34.0  ...                         0                           0
+3        4  27.0  ...                         0                           0
+4        5  40.0  ...                         0                           0
+
+[5 rows x 18 columns]
+Missing values after initial imputation (num_*, days_since_last_interaction):
+num_interactions_total         0
+num_demo_requests_prev_7d      0
+num_email_opens_prev_7d        0
+num_website_visits_prev_7d     0
+num_demo_requests_prev_30d     0
+num_email_opens_prev_30d       0
+num_website_visits_prev_30d    0
+num_demo_requests_prev_60d     0
+num_email_opens_prev_60d       0
+num_website_visits_prev_60d    0
+days_since_last_interaction    0
+dtype: int64
+
+--- Feature Preprocessing Pipeline Defined ---
+--- Target Variable Finalized and Data Split ---
+Original target distribution:
+will_convert_next_30d
+0    0.9825
+1    0.0175
+Name: proportion, dtype: float64
+Training target distribution:
+will_convert_next_30d
+0    0.9825
+1    0.0175
+Name: proportion, dtype: float64
+Test target distribution:
+will_convert_next_30d
+0    0.9825
+1    0.0175
+Name: proportion, dtype: float64
+
+--- Training Models and Performing Hyperparameter Optimization ---
+Training Logistic Regression...
+Best parameters for Logistic Regression: {'classifier__C': 10}
+Best ROC AUC score for Logistic Regression on CV: 0.4899
+
+Training Random Forest...
+Best parameters for Random Forest: {'classifier__max_depth': 5, 'classifier__n_estimators': 100}
+Best ROC AUC score for Random Forest on CV: 0.4881
+
+Training Gradient Boosting...
+Best parameters for Gradient Boosting: {'classifier__learning_rate': 0.01, 'classifier__n_estimators': 100}
+Best ROC AUC score for Gradient Boosting on CV: 0.4952
+
+--- Model Evaluation on Test Set ---
+
+--- Logistic Regression ---
+Confusion Matrix:
+[[244 149]
+ [  0   7]]
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       1.00      0.62      0.77       393
+           1       0.04      1.00      0.09         7
+
+    accuracy                           0.63       400
+   macro avg       0.52      0.81      0.43       400
+weighted avg       0.98      0.63      0.75       400
+
+ROC AUC Score: 0.8066
+Average Precision Score: 0.0479
+
+--- Random Forest ---
+Confusion Matrix:
+[[378  15]
+ [  7   0]]
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.98      0.96      0.97       393
+           1       0.00      0.00      0.00         7
+
+    accuracy                           0.94       400
+   macro avg       0.49      0.48      0.49       400
+weighted avg       0.96      0.94      0.95       400
+
+ROC AUC Score: 0.5085
+Average Precision Score: 0.0208
+
+--- Gradient Boosting ---
+Confusion Matrix:
+[[393   0]
+ [  7   0]]
+
+Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.98      1.00      0.99       393
+           1       0.00      0.00      0.00         7
+
+    accuracy                           0.98       400
+   macro avg       0.49      0.50      0.50       400
+weighted avg       0.97      0.98      0.97       400
+
+ROC AUC Score: 0.5545
+Average Precision Score: 0.0291
+
+--- Feature Importance Analysis ---
+Analyzing feature importance for: Logistic Regression
+Top 10 Feature Coefficients (Absolute Value for Magnitude):
+num_demo_requests_prev_60d     1.789991
+num_demo_requests_prev_30d     1.373370
+num_website_visits_prev_7d     1.273764
+num_email_opens_prev_7d        1.154693
+days_since_last_interaction    1.109625
+lead_source_Referral           0.950587
+industry_Healthcare            0.647389
+num_demo_requests_prev_7d      0.604332
+region_East                    0.474642
+industry_Manufacturing         0.471617
+dtype: float64
+
+--- Pipeline Execution Complete ---
